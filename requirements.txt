@@ -3,3 +3,4 @@ requests
 python-dotenv
 pybaseball
 nba_api
+nflreadpy

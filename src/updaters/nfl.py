@@ -1,18 +1,42 @@
-from pathlib import Path
+from datetime import datetime
 
+import nflreadpy as nfl
 
-SPORT = "nfl"
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_ROOT / "data" / SPORT
+from src.db import save_frame
 
 
 def update() -> None:
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    current_year = datetime.utcnow().year
 
-    print(f"{SPORT.upper()} updater loaded.")
-    print(f"Output folder: {DATA_DIR}")
-    print("Data source connection will be added next.")
+    # Historical completed NFL seasons.
+    # In 2026, this downloads 2018 through 2025.
+    completed_seasons = list(range(2018, current_year))
 
+    print(f"Downloading NFL seasons: {completed_seasons}")
 
-if __name__ == "__main__":
-    update()
+    player_stats = nfl.load_player_stats(
+        completed_seasons
+    ).to_pandas()
+
+    schedules = nfl.load_schedules(
+        completed_seasons
+    ).to_pandas()
+
+    rosters = nfl.load_rosters(
+        completed_seasons
+    ).to_pandas()
+
+    save_frame(
+        player_stats,
+        "nfl_weekly_player_stats"
+    )
+
+    save_frame(
+        schedules,
+        "nfl_schedules"
+    )
+
+    save_frame(
+        rosters,
+        "nfl_rosters"
+    )
