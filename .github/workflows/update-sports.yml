@@ -2,8 +2,26 @@ name: Update Sports Database
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "15 6 * * *"
+    inputs:
+      sport:
+        description: Choose a sport
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - mlb
+          - wnba
+          - nba
+          - nfl
+          - nhl
+          - ncaab
+          - ncaaf
+          - tennis
+          - soccer
+          - golf
+          - mma
+          - nascar
 
 permissions:
   contents: write
@@ -11,32 +29,42 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: "3.13"
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Update all sports
-        env:
-          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
-          PANDASCORE_TOKEN: ${{ secrets.PANDASCORE_TOKEN }}
-          TENNIS_API_KEY: ${{ secrets.TENNIS_API_KEY }}
-        run: python update_all.py
-
-      - name: Commit changed data
         run: |
-          git config user.name "sports-data-bot"
-          git config user.email "sports-data-bot@users.noreply.github.com"
-          git add data/
-          git diff --cached --quiet || git commit -m "Auto-update sports data"
-          git push
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Update selected sport
+        env:
+          SPORTS_API_KEY: ${{ secrets.SPORTS_API_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+          TENNIS_API_KEY: ${{ secrets.TENNIS_API_KEY }}
+        run: |
+          python update_all.py --sport "${{ inputs.sport }}"
+
+      - name: Commit updated database files
+        run: |
+          git config user.name "sports-database-bot"
+          git config user.email "sports-database-bot@users.noreply.github.com"
+
+          git add data logs
+
+          if git diff --cached --quiet; then
+            echo "No database changes to commit."
+          else
+            git commit -m "Update sports databases"
+            git push
+          fi

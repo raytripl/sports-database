@@ -1,26 +1,18 @@
-from datetime import datetime
-import pandas as pd
-from nba_api.stats.endpoints import leaguegamelog
-from nba_api.stats.static import players, teams
-from src.db import save_frame
+from pathlib import Path
 
-def _season_label() -> str:
-    now = datetime.utcnow()
-    start_year = now.year if now.month >= 10 else now.year - 1
-    return f"{start_year}-{str(start_year + 1)[-2:]}"
+
+SPORT = "nba"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATA_DIR = PROJECT_ROOT / "data" / SPORT
+
 
 def update() -> None:
-    season = _season_label()
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    game_log = leaguegamelog.LeagueGameLog(
-        season=season,
-        season_type_all_star="Regular Season",
-        player_or_team_abbreviation="P",
-    ).get_data_frames()[0]
+    print(f"{SPORT.upper()} updater loaded.")
+    print(f"Output folder: {DATA_DIR}")
+    print("Data source connection will be added next.")
 
-    player_df = pd.DataFrame(players.get_players())
-    team_df = pd.DataFrame(teams.get_teams())
 
-    save_frame(game_log, "nba_player_game_logs")
-    save_frame(player_df, "nba_players")
-    save_frame(team_df, "nba_teams")
+if __name__ == "__main__":
+    update()
