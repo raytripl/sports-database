@@ -1,0 +1,101 @@
+match_id,name,status,begin_at,end_at,number_of_games,match_type,league_id,league,serie_id,serie,tournament_id,tournament,team1_id,team1,team2_id,team2,winner_id,winner
+1572130,Upper bracket round 1 match 1: BB vs mellren,canceled,,,3,best_of,5232,CCT Europe,10766,Contenders #6 2026,21377,Playoffs,138288,Basement Bobs,138400,mellren,138400.0,mellren
+1562200,Decider match: LDP vs HAT,finished,,,3,best_of,4554,Gamers Club Liga Série A,10694,June 2026,21222,Group B,131848,largadosypelados,138796,HATERS,138796.0,HATERS
+1555295,Elimination match: NEXORA vs CSH.P,canceled,,,3,best_of,5531,GLuck Yungstar,10738,Closed Qualifier: Series #2 2026,21301,Group D,138845,NEXORA,137500,CYBERSHOKE Prospects,138845.0,NEXORA
+1555293,CSH.P vs WING,canceled,,,3,best_of,5531,GLuck Yungstar,10738,Closed Qualifier: Series #2 2026,21301,Group D,137500,CYBERSHOKE Prospects,135326,Wingman,135326.0,Wingman
+1555290,Elimination match: ARGOS vs MONSTROUS,canceled,,,3,best_of,5531,GLuck Yungstar,10738,Closed Qualifier: Series #2 2026,21300,Group B,138847,ARGOS,138846,MONSTROUS,138847.0,ARGOS
+1555280,Elimination match: OMG vs SHISHKA,canceled,,,3,best_of,5531,GLuck Yungstar,10738,Closed Qualifier: Series #2 2026,21298,Group A,137584,Omega,138670,SHISHKA,137584.0,Omega
+1555117,Round 3: PDAF vs BST.A,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,128624,Patins da Ferrari,135743,BESTIA Academy,128624.0,Patins da Ferrari
+1555114,Round 3: MW vs ex-Vexa,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,138086,METANOIA WOLVES,138892,ex-Vexa,138892.0,ex-Vexa
+1555112,Round 3: MIBR.A vs MAG,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,129800,MIBR Academy,136596,MAGICOS,129800.0,MIBR Academy
+1555111,Round 3: PCY vs ex-KRÜ Esports,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,128378,Procyon Gaming,138029,ex-KRÜ Esports,128378.0,Procyon Gaming
+1555110,Round 3: BK vs VSC,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,138033,Blitzkrieg,137320,Vasco Esports,138033.0,Blitzkrieg
+1555104,Round 2: ex-Vexa vs ex-KRÜ Esports,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,138892,ex-Vexa,138029,ex-KRÜ Esports,138892.0,ex-Vexa
+1555103,Round 2: MW vs VSC,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,138086,METANOIA WOLVES,137320,Vasco Esports,138086.0,METANOIA WOLVES
+1555101,Round 1: ex-KRÜ Esports vs MAG,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,138029,ex-KRÜ Esports,136596,MAGICOS,136596.0,MAGICOS
+1555097,Round 1: PCY vs BST.A,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,128378,Procyon Gaming,135743,BESTIA Academy,135743.0,BESTIA Academy
+1555094,Round 1: VSC vs RF,canceled,,,3,best_of,4842,CCT South America,10737,Series 3 2026,21293,Group Stage,137320,Vasco Esports,127214,Red Feet,127214.0,Red Feet
+1554007,Elimination match: ILWL vs Lavked,canceled,,,3,best_of,4854,European Pro League,10736,Series 8 2026,21288,Group A,137511,illwill,138370,Lavked,138370.0,Lavked
+1554005,ILWL vs WBT,canceled,,,3,best_of,4854,European Pro League,10736,Series 8 2026,21288,Group A,137511,illwill,138841,WBT,138841.0,WBT
+1554004,Lavked vs Just Players,canceled,,,3,best_of,4854,European Pro League,10736,Series 8 2026,21288,Group A,138370,Lavked,138406,Just Players,138406.0,Just Players
+1550165,Upper bracket semifinal 2: Atreides vs Subtop De France,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,138026,Atreides,138710,Subtop De France,138026.0,Atreides
+1550161,Lower bracket round 2 match 4: LILMIX vs MISA,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,126417,Lilmix,137075,Misa Esports,126417.0,Lilmix
+1550160,Lower bracket round 2 match 3: DNT vs Mai Tai,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,135981,Donstu Esports,138848,Mai Tai,135981.0,Donstu Esports
+1550158,Lower bracket round 2 match 1: Wampirki vs JUL,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,138836,Wampirki,138612,Julie&cie,138836.0,Wampirki
+1550156,Upper bracket quarterfinal 3: Just Players vs Atreides,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,138406,Just Players,138026,Atreides,138026.0,Atreides
+1550151,Lower bracket round 1 match 2: MEGO vs SAW,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,128629,megoshort,126738,SAW,126738.0,SAW
+1550150,Lower bracket round 1 match 1: Wampirki vs BIG.A,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,138836,Wampirki,126694,BIG Academy,138836.0,Wampirki
+1550146,Upper bracket round 1 match 5: Just Players vs OBSB,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,138406,Just Players,137449,OlyBet SB,138406.0,Just Players
+1550145,Upper bracket round 1 match 4: Mai Tai vs MEGO,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,138848,Mai Tai,128629,megoshort,138848.0,Mai Tai
+1550143,Upper bracket round 1 match 2: MISA vs Wampirki,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,137075,Misa Esports,138836,Wampirki,137075.0,Misa Esports
+1550142,Upper bracket round 1 match 1: BIG.A vs EJ,canceled,,,3,best_of,5232,CCT Europe,10731,Challengers Series season 4 2026,21274,Playoffs,126694,BIG Academy,137028,Endless Journey,137028.0,Endless Journey
+1550141,Winners match: LDP vs VEXA,finished,,,3,best_of,4554,Gamers Club Liga Série A,10694,June 2026,21222,Group B,131848,largadosypelados,137468,Vexa,137468.0,Vexa
+1547970,Elimination match: VSC vs ISG,canceled,,,3,best_of,5022,Thunderpick World Championship,10730,South American Series #1 2026,21270,Group A,137320,Vasco Esports,125863,Isurus,125863.0,Isurus
+1547967,LDP vs VSC,canceled,,,3,best_of,5022,Thunderpick World Championship,10730,South American Series #1 2026,21270,Group A,131848,largadosypelados,137320,Vasco Esports,131848.0,largadosypelados
+1545548,Lower bracket quarterfinal 2: INF vs K27,canceled,,,3,best_of,5538,Super DraculaN,10727,Season 1 2026,21263,Group B,127976,Infinite,135298,K27,127976.0,Infinite
+1545468,Upper bracket quarterfinal 4: K27 vs WAL,canceled,,,3,best_of,5538,Super DraculaN,10727,Season 1 2026,21263,Group B,135298,K27,138610,Walczaki,138610.0,Walczaki
+1542824,Quarterfinal 1: QUA vs HEC,canceled,,,3,best_of,4243,ESEA,10722,European Finals season 57 2026,21253,Playoffs,130570,QUAZAR,137285,Hermine Esports Club,130570.0,QUAZAR
+1542823,Round 3 match 4: BERG vs WBT,canceled,,,3,best_of,4243,ESEA,10722,European Finals season 57 2026,21253,Playoffs,138181,Esport BERG,138377,WROTBERRY,138377.0,WROTBERRY
+1540269,CHAOS vs ADN,canceled,,,3,best_of,5078,United21,10716,Season 51 2026,21246,Group C,138701,CHAOS,138303,Alpha Dominion Nation,138303.0,Alpha Dominion Nation
+1540267,Decider match: LPH vs Xept,canceled,,,3,best_of,5078,United21,10716,Season 51 2026,21245,Group B,136786,LPH Gaming,138689,Xept,136786.0,LPH Gaming
+1540266,Elimination match: Xept vs CC,canceled,,,3,best_of,5078,United21,10716,Season 51 2026,21245,Group B,138689,Xept,138496,Clutchain,138689.0,Xept
+1540262,Decider match: CLS vs ME,canceled,,,3,best_of,5078,United21,10716,Season 51 2026,21244,Group A,129463,Coalesce,137470,Millennium Esports,137470.0,Millennium Esports
+1539216,ALKA vs ODK.A,canceled,,,1,best_of,4554,Gamers Club Liga Série A,10694,June 2026,21224,Group D,138276,ALKA GAMING,134542,ODDIK Academy,138276.0,ALKA GAMING
+1530795,Lower bracket final: STEP vs CC,canceled,,,3,best_of,5078,United21,10649,Season 50 2026,21198,Playoffs,138778,STEP,138496,Clutchain,138496.0,Clutchain
+1527046,Quarterfinal 3: UNiTY vs SHISHKA,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21177,Playoffs,133063,UNiTY esports,138670,SHISHKA,138670.0,SHISHKA
+1526528,Round 1: BB vs EYE,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,133458,BetBoom Team,131189,EYEBALLERS,,
+1526527,Round 1: B8 vs NIP,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,129381,B8,3218,NIP,,
+1526526,Round 1: 9z vs NEM,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,126709,9z,137289,Team Nemesis,,
+1526525,Round 1: 3DMAX vs ALL,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,3318,3DMAX,133725,Alliance,,
+1526524,Round 1: MNTE vs MIBR,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,131441,Monte,3250,MIBR,,
+1526523,Round 1: PRV vs BIG,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,133719,PARIVISION,3249,BIG,,
+1526522,Round 1: LGC vs M80,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,133708,Legacy,133435,M80,,
+1526521,Round 1: FaZe vs SIN,canceled,,,1,best_of,5021,XSE Pro League,10685,2026,21197,Group Stage,3212,FaZe,127014,Sinners,,
+1526030,RSTR vs DXA,canceled,,,3,best_of,5438,Dfrag,10680,Open Series #5 2026,21185,Group B,127114,Rooster,133211,DXA Esports,,
+1526029,SFE vs MGLBROS,canceled,,,3,best_of,5438,Dfrag,10680,Open Series #5 2026,21185,Group B,135428,SemperFi Esports,138511,MGLBROS,,
+1525973,Abyssal vs DC,canceled,,,3,best_of,5438,Dfrag,10680,Open Series #5 2026,21184,Group A,138092,Abyssal,138015,Ding Cuts,,
+1525951,GZ vs MandL,canceled,,,3,best_of,5438,Dfrag,10680,Open Series #5 2026,21184,Group A,125873,Ground Zero,127125,MARKandLARRY,,
+1523331,Lower bracket round 2 match 6: OLDBOYS PL vs bankaPEPSI,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,137474,OLDBOYS PL,128935,bankaPEPSI,137474.0,OLDBOYS PL
+1519934,Decider match: HS vs Atreides,canceled,,,3,best_of,5232,CCT Europe,10664,Closed Qualifier: Series #4 2026,21155,Group B,133988,HyperSpirit,138026,Atreides,133988.0,HyperSpirit
+1519854,DC vs NEW VISION,canceled,,,3,best_of,5232,CCT Europe,10664,Closed Qualifier: Series #4 2026,21157,Group C,138742,DragonClaw,138650,NEW VISION,138650.0,NEW VISION
+1519853,Elimination match: DC vs LILMIX,canceled,,,3,best_of,5232,CCT Europe,10664,Closed Qualifier: Series #4 2026,21157,Group C,138742,DragonClaw,126417,Lilmix,126417.0,Lilmix
+1519610,Round 5: SPARTA vs BBP,canceled,,,3,best_of,5232,CCT Europe,10663,Series #4 2026,21153,Group Stage,136659,SPARTA,137701,Bebop,137701.0,Bebop
+1519598,Round of 16 match 5: NEM vs BBP,canceled,,,3,best_of,5232,CCT Europe,10663,Series #4 2026,21154,Playoffs,137289,Team Nemesis,137701,Bebop,137289.0,Team Nemesis
+1519576,Round 2: VP vs INOX,canceled,,,3,best_of,5232,CCT Europe,10663,Series #4 2026,21153,Group Stage,3288,Virtus.pro,138617,INOX Division,138617.0,INOX Division
+1519563,Round 1: INOX vs BBP,canceled,,,3,best_of,5232,CCT Europe,10663,Series #4 2026,21153,Group Stage,138617,INOX Division,137701,Bebop,138617.0,INOX Division
+1518435,Lower bracket round 1 match 5: B8.A vs XI,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,137538,B8 Academy,131591,XI Esport,,
+1517549,Lower bracket round 1 match 7: ENJOY vs bankaPEPSI,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,135227,ENJOY,128935,bankaPEPSI,128935.0,bankaPEPSI
+1517547,Lower bracket round 1 match 5: CSH.P vs ZOTIX,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,137500,CYBERSHOKE Prospects,133991,ZOTIX,133991.0,ZOTIX
+1517544,Lower bracket round 1 match 2: BW vs JUMBO,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,136934,Bushido Wildcats,137356,JUMBO TEAM,137356.0,JUMBO TEAM
+1517543,Lower bracket round 1 match 1: AUR.YB vs Project 91,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,133125,Aurora Young Blood,138478,Project 91,138478.0,Project 91
+1517515,Round 4: ARC vs ACE,canceled,,,3,best_of,5437,NODWIN Clutch Series,10639,Season 9 2026,21144,Group Stage,130360,ARCRED,137546,Acend,137546.0,Acend
+1517505,Round 3: BCA vs Atreides,canceled,,,3,best_of,5437,NODWIN Clutch Series,10639,Season 9 2026,21144,Group Stage,135381,Betclic Apogee Esports,138026,Atreides,135381.0,Betclic Apogee Esports
+1516926,Round 3: ARCH vs INF,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21123,Main Stage,138465,Arch,132795,INFURITY Gaming,132795.0,INFURITY Gaming
+1516924,Round 3: PAR vs KSM,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21123,Main Stage,131561,Partizan Esport,130733,KUUSAMO.gg,131561.0,Partizan Esport
+1515421,Round 2: KSM vs X-CITY,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21123,Main Stage,130733,KUUSAMO.gg,137357,X-CITY,130733.0,KUUSAMO.gg
+1512480,Elimination match: FF vs WRAITH PCIFIC,canceled,,,3,best_of,5078,United21,10649,Season 50 2026,21128,Group D,135474,Fire Flux Esports,138660,WRAITH PCIFIC,138660.0,WRAITH PCIFIC
+1512476,Decider match: PRE vs NAVI.J,canceled,,,3,best_of,5078,United21,10649,Season 50 2026,21127,Group C,136846,Prestige,126491,NAVI Junior,126491.0,NAVI Junior
+1511094,Round 1: ARCH vs BB,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21123,Main Stage,138465,Arch,138288,Basement Bobs,138288.0,Basement Bobs
+1510164,Upper bracket round 1 match 10: CSH.P vs FAL.F,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,137500,CYBERSHOKE Prospects,137508,Falcons Force,137508.0,Falcons Force
+1510163,Upper bracket round 1 match 9: MISA vs ZOTIX,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,137075,Misa Esports,133991,ZOTIX,137075.0,Misa Esports
+1510154,Upper bracket round 1 match 3: BW vs BG,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,136934,Bushido Wildcats,134037,Banger Gang,134037.0,Banger Gang
+1510151,Upper bracket round 1 match 1: DNT vs Project 91,canceled,,,3,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,21121,Playoffs,135981,Donstu Esports,138478,Project 91,135981.0,Donstu Esports
+1510111,Round 5: Vortex CGO vs HAVEN,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21031,Contenders Stage,138697,Vortex CGO,134057,HAVENs,138697.0,Vortex CGO
+1508060,Round 4: Oldboys vs Melilla Titans,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21031,Contenders Stage,138638,Oldboys,138695,Melilla Titans,138695.0,Melilla Titans
+1508059,Round 4: ATH vs Vortex CGO,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21031,Contenders Stage,138692,Athlon,138697,Vortex CGO,138697.0,Vortex CGO
+1507113,YN vs WAZ,canceled,,,3,best_of,5437,NODWIN Clutch Series,10639,Season 9 2026,21106,Play-In Group D,128327,Young Ninjas,137950,WAZABI,137950.0,WAZABI
+1507072,Round 4: BB vs HAVEN,canceled,,,3,best_of,5296,Exort Series,10617,Season 27 2026,21031,Contenders Stage,138288,Basement Bobs,134057,HAVENs,138288.0,Basement Bobs
+1506553,ex-PeeP vs PURE,canceled,,,1,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,20707,Regular Season,138055,ex-PeeP,138419,PURE,138055.0,ex-PeeP
+1506551,MISA vs ARCH,canceled,,,1,best_of,4243,ESEA,10487,Advanced Europe season 57 2026,20707,Regular Season,137075,Misa Esports,138465,Arch,138465.0,Arch
+1504770,Round 16 match 3: TDK vs YN,canceled,,,3,best_of,4854,European Pro League,10638,Series 7 2026,21101,Playoffs,137948,TDK,128327,Young Ninjas,137948.0,TDK
+1504732,Round 5: DC vs BW,canceled,,,3,best_of,5232,CCT Europe,10637,Series #3 2026,21095,Group Stage,138742,DragonClaw,136934,Bushido Wildcats,136934.0,Bushido Wildcats
+1504723,Round 3: URSA vs TNC,canceled,,,3,best_of,5232,CCT Europe,10637,Series #3 2026,21095,Group Stage,136900,Ursa,137416,TNC,137416.0,TNC
+1504717,Round 3: RBLS vs RE,canceled,,,3,best_of,5232,CCT Europe,10637,Series #3 2026,21095,Group Stage,134251,Rebels Gaming,132927,Rune Eaters,134251.0,Rebels Gaming
+1504713,Round 2: URSA vs ORM,canceled,,,3,best_of,5232,CCT Europe,10637,Series #3 2026,21095,Group Stage,136900,Ursa,137458,Oramond,136900.0,Ursa
+1504697,DC vs MISA,canceled,,,3,best_of,4854,European Pro League,10636,Series 7 Closed Qualifier 2026,21094,Play-In,138742,DragonClaw,137075,Misa Esports,137075.0,Misa Esports
+1504689,Winners match: TNC vs YN,canceled,,,3,best_of,4854,European Pro League,10636,Series 7 Closed Qualifier 2026,21092,Group C,137416,TNC,128327,Young Ninjas,128327.0,Young Ninjas
+1504679,G1 vs BL,canceled,,,3,best_of,4854,European Pro League,10636,Series 7 Closed Qualifier 2026,21090,Group A,128519,GenOne,132679,brazylijski luz,132679.0,brazylijski luz
+1504060,100T vs Matrix,canceled,,,1,best_of,5498,Parken Challenger Championship,10635,Season 8 2026,21087,Group A,126452,100 Thieves,138296,Matrix,126452.0,100 Thieves
+1504056,FOR vs Matrix,canceled,,,1,best_of,5498,Parken Challenger Championship,10635,Season 8 2026,21087,Group A,137953,Fortress,138296,Matrix,137953.0,Fortress
+1504052,XCLAN vs Matrix,canceled,,,1,best_of,5498,Parken Challenger Championship,10635,Season 8 2026,21087,Group A,138712,XCLAN,138296,Matrix,138712.0,XCLAN
+1504046,Matrix vs S-B,canceled,,,1,best_of,5498,Parken Challenger Championship,10635,Season 8 2026,21087,Group A,138296,Matrix,137589,Strael-Bora,137589.0,Strael-Bora
