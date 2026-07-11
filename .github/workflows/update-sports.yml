@@ -3,8 +3,6 @@ name: Update Sports Database
 on:
   workflow_dispatch:
   schedule:
-    # 6:15 AM UTC = 1:15 AM Central during standard time,
-    # and 12:15 AM Central during daylight time.
     - cron: "15 6 * * *"
 
 permissions:
@@ -13,14 +11,14 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -32,6 +30,7 @@ jobs:
         env:
           FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
           PANDASCORE_TOKEN: ${{ secrets.PANDASCORE_TOKEN }}
+          TENNIS_API_KEY: ${{ secrets.TENNIS_API_KEY }}
         run: python update_all.py
 
       - name: Commit changed data
