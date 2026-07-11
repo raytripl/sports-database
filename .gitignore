@@ -32,3 +32,4 @@ logs/*.txt
 .pytest_cache/
 .coverage
 htmlcov/
+legacy/
