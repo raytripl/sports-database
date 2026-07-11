@@ -1,17 +1,15 @@
-from pathlib import Path
+from __future__ import annotations
 
-
-SPORT = "mlb"
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_ROOT / "data" / SPORT
+from src.updaters.mlb_download import download_recent_statcast
 
 
 def update() -> None:
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    print("Starting MLB update...")
 
-    print(f"{SPORT.upper()} updater loaded.")
-    print(f"Output folder: {DATA_DIR}")
-    print("Data source connection will be added next.")
+    download_recent_statcast(days_back=10)
+
+    print("MLB download stage complete.")
+    print("MLB history/model stage will run after integration.")
 
 
 if __name__ == "__main__":
