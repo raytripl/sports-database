@@ -33,3 +33,9 @@ logs/*.txt
 .coverage
 htmlcov/
 legacy/
+
+# Generated sports data
+/data/sports.db
+/data/exports/*.csv
+/data/mlb/*.csv
+/data/wnba/*.csv
