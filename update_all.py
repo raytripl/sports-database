@@ -3,8 +3,18 @@ from __future__ import annotations
 import argparse
 import importlib
 import sys
+import time
 import traceback
 from datetime import datetime
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+
+# Automatically load API keys from the local .env file.
+load_dotenv(PROJECT_ROOT / ".env")
 
 
 SPORT_MODULES = {
@@ -12,25 +22,21 @@ SPORT_MODULES = {
     "wnba": "src.updaters.wnba",
     "nba": "src.updaters.nba",
     "nfl": "src.updaters.nfl",
-    "nhl": "src.updaters.nhl",
-    "ncaab": "src.updaters.ncaab",
-    "ncaaf": "src.updaters.ncaaf",
-    "tennis": "src.updaters.tennis",
     "soccer": "src.updaters.soccer",
-    "golf": "src.updaters.golf",
-    "mma": "src.updaters.mma",
-    "nascar": "src.updaters.nascar",
+    "tennis": "src.updaters.tennis",
+    "nhl": "src.updaters.nhl",
 }
 
 
-def run_sport(sport: str) -> bool:
+def run_sport(sport: str) -> tuple[bool, float, str]:
     module_name = SPORT_MODULES[sport]
+    started = time.perf_counter()
 
     print()
-    print("=" * 64)
+    print("=" * 68)
     print(f"UPDATING {sport.upper()}")
     print(f"STARTED: {datetime.now():%Y-%m-%d %I:%M:%S %p}")
-    print("=" * 64)
+    print("=" * 68)
 
     try:
         module = importlib.import_module(module_name)
@@ -43,18 +49,22 @@ def run_sport(sport: str) -> bool:
 
         update_function()
 
-        print(f"[SUCCESS] {sport.upper()}")
-        return True
+        elapsed = time.perf_counter() - started
+        print(f"[SUCCESS] {sport.upper()} ({elapsed:.1f} seconds)")
+        return True, elapsed, ""
 
     except Exception as error:
+        elapsed = time.perf_counter() - started
+
         print(f"[FAILED] {sport.upper()}: {error}")
         traceback.print_exc()
-        return False
+
+        return False, elapsed, str(error)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Update one sport or all configured sports."
+        description="Update one completed sport or every completed sport."
     )
 
     parser.add_argument(
@@ -72,32 +82,39 @@ def main() -> int:
         else [args.sport]
     )
 
-    results: dict[str, bool] = {}
+    overall_started = time.perf_counter()
+    results: dict[str, tuple[bool, float, str]] = {}
 
     for sport in selected_sports:
         results[sport] = run_sport(sport)
 
-    print()
-    print("=" * 64)
-    print("UPDATE SUMMARY")
-    print("=" * 64)
+    total_elapsed = time.perf_counter() - overall_started
 
-    for sport, successful in results.items():
+    print()
+    print("=" * 68)
+    print("FINAL UPDATE SUMMARY")
+    print("=" * 68)
+
+    for sport, (successful, elapsed, error) in results.items():
         status = "SUCCESS" if successful else "FAILED"
-        print(f"{sport.upper():12} {status}")
+        print(f"{sport.upper():12} {status:8} {elapsed:8.1f} seconds")
+
+        if error:
+            print(f"{'':12} Error: {error}")
 
     failures = [
         sport
-        for sport, successful in results.items()
+        for sport, (successful, _, _) in results.items()
         if not successful
     ]
 
+    print("-" * 68)
+    print(f"Total elapsed time: {total_elapsed:.1f} seconds")
+
     if failures:
-        print()
-        print("Failed sports:", ", ".join(failures))
+        print(f"Failed sports: {', '.join(failures)}")
         return 1
 
-    print()
     print("All requested sports completed successfully.")
     return 0
 
