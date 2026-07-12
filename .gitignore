@@ -39,3 +39,4 @@ legacy/
 /data/exports/*.csv
 /data/mlb/*.csv
 /data/wnba/*.csv
+/backups/*/

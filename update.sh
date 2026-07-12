@@ -19,6 +19,10 @@ echo "Installing dependencies..."
 python -m pip install -r requirements.txt
 
 echo
+echo "Creating backup..."
+python backup_database.py
+
+echo
 echo "Updating: $SPORT"
 python update_all.py --sport "$SPORT"
 
