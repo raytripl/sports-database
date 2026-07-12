@@ -16,9 +16,12 @@ fi
 source .venv/Scripts/activate
 
 echo "Installing dependencies..."
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 
 echo
 echo "Updating: $SPORT"
 python update_all.py --sport "$SPORT"
+
+echo
+echo "Generating health report..."
+python health_report.py
