@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       sport:
-        description: Choose a sport
+        description: Choose a sport to update
         required: true
         default: all
         type: choice
@@ -14,26 +14,21 @@ on:
           - wnba
           - nba
           - nfl
-          - nhl
-          - ncaab
-          - ncaaf
-          - tennis
           - soccer
-          - golf
-          - mma
-          - nascar
+          - tennis
+          - nhl
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -46,25 +41,64 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Update selected sport
-        env:
-          SPORTS_API_KEY: ${{ secrets.SPORTS_API_KEY }}
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
-          TENNIS_API_KEY: ${{ secrets.TENNIS_API_KEY }}
+      - name: Create environment file
+        shell: bash
+        run: |
+          {
+            echo "FOOTBALL_DATA_TOKEN=${{ secrets.FOOTBALL_DATA_TOKEN }}"
+            echo "TENNIS_API_KEY=${{ secrets.TENNIS_API_KEY }}"
+            echo "PANDASCORE_API_KEY=${{ secrets.PANDASCORE_API_KEY }}"
+            echo "MLB_API_KEY=${{ secrets.MLB_API_KEY }}"
+          } > .env
+
+      - name: Run selected sports update
         run: |
           python update_all.py --sport "${{ inputs.sport }}"
 
-      - name: Commit updated database files
+      - name: Validate generated data
+        if: ${{ inputs.sport == 'all' }}
         run: |
-          git config user.name "sports-database-bot"
-          git config user.email "sports-database-bot@users.noreply.github.com"
+          python validate_data.py
 
-          git add data logs
+      - name: Generate health report
+        run: |
+          python health_report.py | tee health-report.txt
 
-          if git diff --cached --quiet; then
-            echo "No database changes to commit."
-          else
-            git commit -m "Update sports databases"
-            git push
+      - name: Package generated database
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p artifact-output
+
+          if [ -f data/sports.db ]; then
+            cp data/sports.db artifact-output/
           fi
+
+          if [ -d data/exports ]; then
+            cp -r data/exports artifact-output/
+          fi
+
+          if [ -d data/mlb ]; then
+            cp -r data/mlb artifact-output/
+          fi
+
+          if [ -d data/wnba ]; then
+            cp -r data/wnba artifact-output/
+          fi
+
+          if [ -d logs ]; then
+            cp -r logs artifact-output/
+          fi
+
+          if [ -f health-report.txt ]; then
+            cp health-report.txt artifact-output/
+          fi
+
+      - name: Upload sports database artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sports-database-${{ inputs.sport }}-${{ github.run_number }}
+          path: artifact-output/
+          retention-days: 14
+          if-no-files-found: warn
