@@ -27,5 +27,9 @@ echo "Updating: $SPORT"
 python update_all.py --sport "$SPORT"
 
 echo
+echo "Validating databases..."
+python validate_data.py
+
+echo
 echo "Generating health report..."
 python health_report.py
