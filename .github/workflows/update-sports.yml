@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload sports database artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: sports-database-${{ inputs.sport }}-${{ github.run_number }}
           path: artifact-output/
