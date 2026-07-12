@@ -9,11 +9,10 @@ from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
+from logger import log
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-
-# Automatically load API keys from the local .env file.
 load_dotenv(PROJECT_ROOT / ".env")
 
 
@@ -32,11 +31,10 @@ def run_sport(sport: str) -> tuple[bool, float, str]:
     module_name = SPORT_MODULES[sport]
     started = time.perf_counter()
 
-    print()
-    print("=" * 68)
-    print(f"UPDATING {sport.upper()}")
-    print(f"STARTED: {datetime.now():%Y-%m-%d %I:%M:%S %p}")
-    print("=" * 68)
+    log("=" * 68)
+    log(f"UPDATING {sport.upper()}")
+    log(f"STARTED: {datetime.now():%Y-%m-%d %I:%M:%S %p}")
+    log("=" * 68)
 
     try:
         module = importlib.import_module(module_name)
@@ -50,13 +48,13 @@ def run_sport(sport: str) -> tuple[bool, float, str]:
         update_function()
 
         elapsed = time.perf_counter() - started
-        print(f"[SUCCESS] {sport.upper()} ({elapsed:.1f} seconds)")
+        log(f"[SUCCESS] {sport.upper()} ({elapsed:.1f} seconds)")
         return True, elapsed, ""
 
     except Exception as error:
         elapsed = time.perf_counter() - started
 
-        print(f"[FAILED] {sport.upper()}: {error}")
+        log(f"[FAILED] {sport.upper()}: {error}")
         traceback.print_exc()
 
         return False, elapsed, str(error)
@@ -90,17 +88,19 @@ def main() -> int:
 
     total_elapsed = time.perf_counter() - overall_started
 
-    print()
-    print("=" * 68)
-    print("FINAL UPDATE SUMMARY")
-    print("=" * 68)
+    log("=" * 68)
+    log("FINAL UPDATE SUMMARY")
+    log("=" * 68)
 
     for sport, (successful, elapsed, error) in results.items():
         status = "SUCCESS" if successful else "FAILED"
-        print(f"{sport.upper():12} {status:8} {elapsed:8.1f} seconds")
+        log(f"{sport.upper():12} {status:8} {elapsed:8.1f} seconds")
 
         if error:
-            print(f"{'':12} Error: {error}")
+            log(f"{'':12} Error: {error}")
+
+    log("-" * 68)
+    log(f"Total elapsed time: {total_elapsed:.1f} seconds")
 
     failures = [
         sport
@@ -108,14 +108,11 @@ def main() -> int:
         if not successful
     ]
 
-    print("-" * 68)
-    print(f"Total elapsed time: {total_elapsed:.1f} seconds")
-
     if failures:
-        print(f"Failed sports: {', '.join(failures)}")
+        log(f"Failed sports: {', '.join(failures)}")
         return 1
 
-    print("All requested sports completed successfully.")
+    log("All requested sports completed successfully.")
     return 0
 
 
