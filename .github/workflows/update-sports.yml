@@ -55,17 +55,18 @@ jobs:
           } > .env
 
       - name: Run selected sports update
- 	 env:
-   	 SELECTED_SPORT: ${{ inputs.sport || 'all' }}
-  	run: |
-   	 python update_all.py --sport "$SELECTED_SPORT"
+        env:
+          SELECTED_SPORT: ${{ inputs.sport || 'all' }}
+        run: |
+          python update_all.py --sport "$SELECTED_SPORT"
 
       - name: Validate generated data
- 	 if: ${{ github.event_name == 'schedule' || inputs.sport == 'all' }}
-  	run: |
-   	 python validate_data.py
+        if: ${{ github.event_name == 'schedule' || inputs.sport == 'all' }}
+        run: |
+          python validate_data.py
 
       - name: Generate health report
+        if: always()
         run: |
           python health_report.py | tee health-report.txt
 
@@ -91,6 +92,26 @@ jobs:
             cp -r data/wnba artifact-output/
           fi
 
+          if [ -d data/nba ]; then
+            cp -r data/nba artifact-output/
+          fi
+
+          if [ -d data/nfl ]; then
+            cp -r data/nfl artifact-output/
+          fi
+
+          if [ -d data/soccer ]; then
+            cp -r data/soccer artifact-output/
+          fi
+
+          if [ -d data/tennis ]; then
+            cp -r data/tennis artifact-output/
+          fi
+
+          if [ -d data/nhl ]; then
+            cp -r data/nhl artifact-output/
+          fi
+
           if [ -d logs ]; then
             cp -r logs artifact-output/
           fi
@@ -101,9 +122,9 @@ jobs:
 
       - name: Upload sports database artifact
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
-         name: sports-database-${{ inputs.sport || 'all' }}-${{ github.run_number }}
+          name: sports-database-${{ inputs.sport || 'all' }}-${{ github.run_number }}
           path: artifact-output/
           retention-days: 14
           if-no-files-found: warn
