@@ -18,6 +18,9 @@ on:
           - tennis
           - nhl
 
+  schedule:
+    - cron: "30 11 * * *"
+
 permissions:
   contents: read
 
@@ -52,13 +55,15 @@ jobs:
           } > .env
 
       - name: Run selected sports update
-        run: |
-          python update_all.py --sport "${{ inputs.sport }}"
+ 	 env:
+   	 SELECTED_SPORT: ${{ inputs.sport || 'all' }}
+  	run: |
+   	 python update_all.py --sport "$SELECTED_SPORT"
 
       - name: Validate generated data
-        if: ${{ inputs.sport == 'all' }}
-        run: |
-          python validate_data.py
+ 	 if: ${{ github.event_name == 'schedule' || inputs.sport == 'all' }}
+  	run: |
+   	 python validate_data.py
 
       - name: Generate health report
         run: |
@@ -98,7 +103,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: sports-database-${{ inputs.sport }}-${{ github.run_number }}
+         name: sports-database-${{ inputs.sport || 'all' }}-${{ github.run_number }}
           path: artifact-output/
           retention-days: 14
           if-no-files-found: warn
