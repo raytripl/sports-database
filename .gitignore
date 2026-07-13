@@ -52,3 +52,6 @@ data/model_runs/*.json
 # Automated runtime captures
 /data/runtime/
 
+
+# Generated multi-slate calibration reports
+data/calibration/

@@ -21,10 +21,13 @@ try {
     $ThroughDate = (Get-Date).AddDays(-1).ToString("yyyy-MM-dd")
     & $Python -m src.audits.run_daily_audits --through-date $ThroughDate >> $Log 2>&1
     $AuditExit = $LASTEXITCODE
+    & $Python -m src.audits.calibration_report --output-dir data/calibration >> $Log 2>&1
+    $CalibrationExit = $LASTEXITCODE
     $ErrorActionPreference = "Stop"
 
     if ($AuditExit -ne 0) { throw "Audit runner exited with $AuditExit" }
-    "[$(Get-Date -Format o)] Audit completed through $ThroughDate; WNBA update=$WnbaExit MLB update=$MlbExit" |
+    if ($CalibrationExit -ne 0) { throw "Calibration runner exited with $CalibrationExit" }
+    "[$(Get-Date -Format o)] Audit and calibration completed through $ThroughDate; WNBA update=$WnbaExit MLB update=$MlbExit" |
         Out-File -Append -FilePath $Log
 }
 catch {
