@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 from src.imports import prizepicks, process_pool
+from src.imports.consolidate_exports import consolidate_directory
 from src.imports.fetch_mlb_live_context import fetch_to_csv
 from src.pipelines.mlb_daily import run_pipeline as run_mlb_pipeline
 from src.pipelines.wnba_daily import run_pipeline as run_wnba_pipeline
@@ -111,8 +112,19 @@ def acquire_pool() -> tuple[Path, Path, int, str, str | None]:
             raise RuntimeError(
                 f"Direct PrizePicks capture failed and no valid manual export exists: {error}"
             ) from error
-        rows = len(pd.read_csv(fallback))
-        return fallback, fallback, rows, "MANUAL_EXPORT_FALLBACK", f"{type(error).__name__}: {error}"
+        consolidated, consolidation = consolidate_directory(
+            fallback.parent,
+            RUNTIME_ROOT / "manual_consolidated" / "latest_all_sports.csv",
+            anchor=fallback,
+            max_age_hours=24.0,
+        )
+        rows = len(pd.read_csv(consolidated))
+        mode = (
+            "MANUAL_EXPORT_CONSOLIDATED"
+            if consolidation["mode"] == "CONSOLIDATED_EXPORTS"
+            else "MANUAL_EXPORT_FALLBACK"
+        )
+        return fallback, consolidated, rows, mode, f"{type(error).__name__}: {error}"
 
 
 def run_mlb_with_context(normalized_path: Path, slate_date: str) -> dict[str, object]:
