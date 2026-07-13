@@ -23,6 +23,9 @@ WNBA_HISTORY = PROJECT_ROOT / "data" / "wnba" / "WNBA_RESULTS_HISTORY.csv"
 MLB_HISTORY = PROJECT_ROOT / "data" / "mlb" / "MLB_RESULTS_HISTORY.csv"
 LOCK_PATH = RUNTIME_ROOT / "hourly_capture.lock"
 CENTRAL = ZoneInfo("America/Chicago")
+REQUIRED_EXPORT_COLUMNS = {
+    "projection_id", "league", "player_name", "stat_type", "line_score",
+}
 
 
 @contextmanager
@@ -31,7 +34,16 @@ def single_run_lock(path: Path):
     try:
         descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
     except FileExistsError as error:
-        raise RuntimeError("Another PrizePicks capture is already running") from error
+        try:
+            existing_pid = int(path.read_text(encoding="ascii").strip())
+            os.kill(existing_pid, 0)
+        except (OSError, ValueError):
+            path.unlink(missing_ok=True)
+            descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        else:
+            raise RuntimeError(
+                f"Another PrizePicks capture is already running (PID {existing_pid})"
+            ) from error
     try:
         os.write(descriptor, str(os.getpid()).encode("ascii"))
         os.close(descriptor)
@@ -65,18 +77,55 @@ def configure_runtime_directories() -> None:
     process_pool.ARCHIVE_DIR = RUNTIME_ROOT / "archive"
 
 
+def valid_export(path: Path) -> bool:
+    try:
+        columns = {str(column).strip().lower() for column in pd.read_csv(path, nrows=0).columns}
+        return REQUIRED_EXPORT_COLUMNS.issubset(columns)
+    except (OSError, ValueError, pd.errors.ParserError):
+        return False
+
+
+def find_latest_export(search_directories: list[Path] | None = None) -> Path | None:
+    directories = search_directories or [
+        Path.home() / "Downloads",
+        PROJECT_ROOT / "data" / "pools" / "incoming",
+    ]
+    candidates: list[Path] = []
+    for directory in directories:
+        if directory.exists():
+            candidates.extend(path for path in directory.glob("*.csv") if path.is_file())
+    for path in sorted(candidates, key=lambda item: item.stat().st_mtime, reverse=True):
+        if valid_export(path):
+            return path
+    return None
+
+
+def acquire_pool() -> tuple[Path, Path, int, str, str | None]:
+    try:
+        payload = prizepicks.download_prizepicks_payload(timeout=30, retries=3)
+        raw_path, csv_path, rows = prizepicks.save_pool(payload)
+        return raw_path, csv_path, rows, "DIRECT_API", None
+    except Exception as error:
+        fallback = find_latest_export()
+        if fallback is None:
+            raise RuntimeError(
+                f"Direct PrizePicks capture failed and no valid manual export exists: {error}"
+            ) from error
+        rows = len(pd.read_csv(fallback))
+        return fallback, fallback, rows, "MANUAL_EXPORT_FALLBACK", f"{type(error).__name__}: {error}"
+
+
 def run_mlb_with_context(normalized_path: Path, slate_date: str) -> dict[str, object]:
     context_path = RUNTIME_ROOT / "mlb_live" / f"mlb_live_context_{slate_date}.csv"
     context_error = None
     try:
         fetch_to_csv(slate_date, context_path)
-    except Exception as error:  # baseline must survive an enrichment outage
+    except Exception as error:
         context_path = None
         context_error = f"{type(error).__name__}: {error}"
     return run_mlb_pipeline(
         normalized_path, slate_date, MLB_HISTORY, MODEL_RUNS,
-        live_context_path=context_path,
-        live_context_error=context_error,
+        live_context_path=context_path, live_context_error=context_error,
     )
 
 
@@ -85,8 +134,7 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
     configure_runtime_directories()
     RUNTIME_ROOT.mkdir(parents=True, exist_ok=True)
     with single_run_lock(LOCK_PATH):
-        payload = prizepicks.download_prizepicks_payload(timeout=30, retries=3)
-        raw_path, downloaded_csv, all_sport_rows = prizepicks.save_pool(payload)
+        raw_path, downloaded_csv, all_sport_rows, mode, direct_error = acquire_pool()
         (_, normalized_path, _, _, normalized, _) = process_pool.process_pool(downloaded_csv)
         wnba_dates = eligible_wnba_dates(normalized, current)
         mlb_dates = eligible_mlb_dates(normalized, current)
@@ -94,6 +142,7 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
         mlb_runs = [run_mlb_with_context(normalized_path, day) for day in mlb_dates]
         manifest = {
             "captured_at": current.astimezone(CENTRAL).isoformat(),
+            "acquisition_mode": mode, "direct_api_error": direct_error,
             "raw_path": str(raw_path), "downloaded_csv": str(downloaded_csv),
             "normalized_path": str(normalized_path), "all_sport_rows": all_sport_rows,
             "normalized_mlb_wnba_rows": len(normalized),
@@ -115,6 +164,7 @@ def main() -> None:
         print("Dry-run validates imports only; no network request was made.")
         return
     result = run_hourly_capture()
+    print(f"Acquisition mode: {result['acquisition_mode']}")
     print(f"All-sport rows: {result['all_sport_rows']:,}")
     print(f"WNBA dates routed: {result['wnba_dates_routed']}")
     print(f"MLB dates routed: {result['mlb_dates_routed']}")
