@@ -144,6 +144,32 @@ def required_columns_present(frame: pd.DataFrame) -> None:
         )
 
 
+def filter_to_slate_date(frame: pd.DataFrame, slate_date: str) -> pd.DataFrame:
+    """Keep only rows belonging to the requested slate date.
+
+    Legacy pools without a slate_date column are accepted unchanged. Modern
+    mixed-date pools are filtered strictly so tomorrow's props cannot leak into
+    today's decision snapshot.
+    """
+
+    if "slate_date" not in frame.columns:
+        return frame.copy()
+
+    requested = pd.Timestamp(slate_date).normalize()
+    dates = pd.to_datetime(frame["slate_date"], errors="coerce").dt.normalize()
+    filtered = frame.loc[dates == requested].copy()
+    if filtered.empty:
+        available = sorted(
+            pd.Timestamp(value).strftime("%Y-%m-%d")
+            for value in dates.dropna().unique()
+        )
+        raise ValueError(
+            f"Pool contains no rows for slate_date {slate_date}. "
+            f"Available dates: {available}"
+        )
+    return filtered
+
+
 def value_from_row(row: pd.Series, column: str) -> object:
     return row[column] if column in row.index else None
 
@@ -163,6 +189,7 @@ def save_snapshot(
     frame = normalize_columns(frame)
 
     required_columns_present(frame)
+    frame = filter_to_slate_date(frame, slate_date)
 
     resolved_snapshot_id = snapshot_id or build_snapshot_id(
         slate_date=slate_date,
