@@ -5,7 +5,8 @@ import json
 from pathlib import Path
 
 from src.decisions.create_decision_board import create_board
-from src.decisions.enrich_mlb_live_context import enrich_snapshot
+from src.decisions.enrich_mlb_k_context import enrich_snapshot as enrich_k
+from src.decisions.enrich_mlb_live_context import enrich_snapshot as enrich_live
 from src.decisions.import_decision_board import import_board
 from src.decisions.save_snapshot import save_snapshot
 from src.decisions.score_mlb_decision_board import score_board
@@ -13,12 +14,8 @@ from src.imports.capture_matchup_foundation import capture
 
 
 def run_pipeline(
-    pool_path: Path,
-    slate_date: str,
-    history_path: Path,
-    output_dir: Path,
-    snapshot_id: str | None = None,
-    live_context_path: Path | None = None,
+    pool_path: Path, slate_date: str, history_path: Path, output_dir: Path,
+    snapshot_id: str | None = None, live_context_path: Path | None = None,
     live_context_error: str | None = None,
 ) -> dict[str, object]:
     if not pool_path.exists():
@@ -37,34 +34,37 @@ def run_pipeline(
     board_rows = create_board(resolved, board_path)
     scored_rows = score_board(board_path, history_path, scored_path)
     updated, skipped = import_board(scored_path)
-    live_counts = None
+    live_counts = k_counts = None
+    k_error = None
     if live_context_path is not None:
-        live_counts = enrich_snapshot(resolved, live_context_path)
+        live_counts = enrich_live(resolved, live_context_path)
+        try:
+            k_counts = enrich_k(
+                resolved, live_context_path, history_path,
+                int(str(slate_date)[:4]),
+            )
+        except Exception as error:
+            k_error = f"{type(error).__name__}: {error}"
 
     manifest: dict[str, object] = {
         "pipeline": "MLB_DAILY_BASELINE",
         "model_version": "v17.3",
         "operating_revision": "Evidence-Enforced Revision B",
-        "slate_date": slate_date,
-        "snapshot_id": resolved,
-        "snapshot_rows_inserted": inserted,
-        "capture": capture_counts,
-        "decision_board_rows": board_rows,
-        "scored_rows": scored_rows,
-        "database_rows_updated": updated,
-        "database_rows_skipped": skipped,
+        "slate_date": slate_date, "snapshot_id": resolved,
+        "snapshot_rows_inserted": inserted, "capture": capture_counts,
+        "decision_board_rows": board_rows, "scored_rows": scored_rows,
+        "database_rows_updated": updated, "database_rows_skipped": skipped,
         "live_context": live_counts,
         "live_context_path": str(live_context_path) if live_context_path else None,
         "live_context_error": live_context_error,
-        "board_path": str(board_path),
-        "scored_path": str(scored_path),
-        "baseline_grade_cap": "B+",
-        "recommendations_enabled": False,
+        "opponent_k_context": k_counts, "opponent_k_context_error": k_error,
+        "board_path": str(board_path), "scored_path": str(scored_path),
+        "baseline_grade_cap": "B+", "recommendations_enabled": False,
         "power_play_eligible": False,
         "live_gates_required": [
             "confirmed_lineup", "batting_order", "starting_pitcher",
-            "opponent_k_percent_vs_hand", "expected_pitch_count",
-            "expected_innings", "platoon_risk", "weather",
+            "opponent_k_percent_vs_hand", "confirmed_lineup_k_percent",
+            "expected_pitch_count", "expected_innings", "platoon_risk", "weather",
         ],
     }
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
@@ -85,14 +85,10 @@ def main() -> None:
         args.pool, args.date, args.history, args.output_dir,
         args.snapshot_id, args.live_context,
     )
-    print("=" * 70)
-    print("SPORTS HUB - MLB DAILY BASELINE")
-    print("=" * 70)
     print(f"Slate: {result['slate_date']}")
     print(f"Snapshot: {result['snapshot_id']}")
     print(f"Decision board rows: {result['decision_board_rows']:,}")
-    print(f"Live context: {result['live_context']}")
-    print(f"Manifest: {result['manifest_path']}")
+    print(f"Opponent K context: {result['opponent_k_context']}")
     print("Baseline cap: B+; recommendations remain disabled.")
 
 
