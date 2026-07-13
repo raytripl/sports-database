@@ -19,6 +19,13 @@ VOLUME_COLUMNS = {
     "Pts+Rebs+Asts": ("FGA", "FTA"),
     "Fantasy Score": ("FGA", "FTA"),
     "3-PT Made": ("FG3A",),
+    "3-PT Attempted": ("FG3A",),
+    "FG Attempted": ("FGA",),
+    "FG Made": ("FGA",),
+    "2-PT Attempted": ("FG2A",),
+    "2-PT Made": ("FG2A",),
+    "Off Rebounds": ("OREB",),
+    "Def Rebounds": ("DREB",),
 }
 
 

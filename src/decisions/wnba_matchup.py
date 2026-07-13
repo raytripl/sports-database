@@ -21,6 +21,15 @@ PROP_TO_RESULT = {
     "Rebs+Asts": "REB_AST",
     "Fantasy Score": "FANTASY_SCORE_PP",
     "3-PT Made": "FG3M",
+    "3-PT Attempted": "FG3A",
+    "FG Attempted": "FGA",
+    "FG Made": "FGM",
+    "Def Rebounds": "DREB",
+    "Off Rebounds": "OREB",
+    "Blks+Stls": "STOCKS",
+    "Turnovers": "TOV",
+    "2-PT Attempted": "FG2A",
+    "2-PT Made": "FG2M",
 }
 
 
