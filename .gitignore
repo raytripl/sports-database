@@ -47,4 +47,5 @@ data/model_runs/*.csv
 # Local database backups
 /backups/*
 !/backups/.gitkeep
+data/model_runs/*.json
 
