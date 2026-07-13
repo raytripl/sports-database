@@ -294,6 +294,13 @@ def save_snapshot(
             if not player or not prop_type or line is None:
                 continue
 
+            opponent = clean_text(value_from_row(row, "opponent"))
+            if opponent is None and "+" not in player:
+                candidate = clean_text(value_from_row(row, "game_description"))
+                team = clean_text(value_from_row(row, "team"))
+                if candidate and "/" not in candidate and candidate != team:
+                    opponent = candidate
+
             values = (
                 slate_date,
                 created_at,
@@ -308,7 +315,7 @@ def save_snapshot(
                 player,
                 clean_text(value_from_row(row, "player_id")),
                 clean_text(value_from_row(row, "team")),
-                clean_text(value_from_row(row, "opponent")),
+                opponent,
                 prop_type,
                 line,
                 normalize_direction(value_from_row(row, "direction")),
@@ -361,6 +368,20 @@ def save_snapshot(
 
             if cursor.rowcount == 1:
                 inserted += 1
+
+        connection.execute(
+            """
+            UPDATE model_decisions
+            SET opponent = game_description
+            WHERE snapshot_id = ?
+              AND is_combo_prop = 0
+              AND (opponent IS NULL OR TRIM(opponent) = '')
+              AND game_description IS NOT NULL
+              AND TRIM(game_description) <> ''
+              AND game_description NOT LIKE '%/%'
+            """,
+            (resolved_snapshot_id,),
+        )
 
     return resolved_snapshot_id, inserted
 
