@@ -73,6 +73,12 @@ def capture(snapshot_id: str, pool_path: Path, sport: str) -> dict[str, int]:
     if not pool_path.exists():
         raise FileNotFoundError(f"Pool not found: {pool_path}")
     frame = prepare_pool(pd.read_csv(pool_path))
+    if "league" in frame.columns:
+        frame = frame[
+            frame["league"].fillna("").astype(str).str.upper() == sport.upper()
+        ].copy()
+        if frame.empty:
+            raise ValueError(f"Pool contains no rows for sport: {sport}")
     ensure_foundation_schema()
 
     positions_updated = 0

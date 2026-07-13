@@ -170,6 +170,22 @@ def filter_to_slate_date(frame: pd.DataFrame, slate_date: str) -> pd.DataFrame:
     return filtered
 
 
+def filter_to_sport(frame: pd.DataFrame, sport: str) -> pd.DataFrame:
+    """Prevent rows from another league being mislabeled as this sport."""
+
+    league_column = "league" if "league" in frame.columns else "sport"
+    if league_column not in frame.columns:
+        return frame.copy()
+    leagues = frame[league_column].fillna("").astype(str).str.upper()
+    filtered = frame.loc[leagues == sport.upper()].copy()
+    if filtered.empty:
+        available = sorted(value for value in leagues.unique() if value)
+        raise ValueError(
+            f"Pool contains no rows for sport {sport}. Available: {available}"
+        )
+    return filtered
+
+
 def value_from_row(row: pd.Series, column: str) -> object:
     return row[column] if column in row.index else None
 
@@ -189,6 +205,7 @@ def save_snapshot(
     frame = normalize_columns(frame)
 
     required_columns_present(frame)
+    frame = filter_to_sport(frame, sport)
     frame = filter_to_slate_date(frame, slate_date)
 
     resolved_snapshot_id = snapshot_id or build_snapshot_id(

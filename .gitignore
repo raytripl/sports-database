@@ -49,3 +49,6 @@ data/model_runs/*.csv
 !/backups/.gitkeep
 data/model_runs/*.json
 
+# Automated runtime captures
+/data/runtime/
+
