@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 from src.imports import prizepicks, process_pool
+from src.imports.fetch_mlb_live_context import fetch_to_csv
 from src.pipelines.mlb_daily import run_pipeline as run_mlb_pipeline
 from src.pipelines.wnba_daily import run_pipeline as run_wnba_pipeline
 
@@ -64,46 +65,41 @@ def configure_runtime_directories() -> None:
     process_pool.ARCHIVE_DIR = RUNTIME_ROOT / "archive"
 
 
+def run_mlb_with_context(normalized_path: Path, slate_date: str) -> dict[str, object]:
+    context_path = RUNTIME_ROOT / "mlb_live" / f"mlb_live_context_{slate_date}.csv"
+    context_error = None
+    try:
+        fetch_to_csv(slate_date, context_path)
+    except Exception as error:  # baseline must survive an enrichment outage
+        context_path = None
+        context_error = f"{type(error).__name__}: {error}"
+    return run_mlb_pipeline(
+        normalized_path, slate_date, MLB_HISTORY, MODEL_RUNS,
+        live_context_path=context_path,
+        live_context_error=context_error,
+    )
+
+
 def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
     current = now or datetime.now(tz=CENTRAL)
     configure_runtime_directories()
     RUNTIME_ROOT.mkdir(parents=True, exist_ok=True)
-
     with single_run_lock(LOCK_PATH):
         payload = prizepicks.download_prizepicks_payload(timeout=30, retries=3)
         raw_path, downloaded_csv, all_sport_rows = prizepicks.save_pool(payload)
-        (
-            _processed_file,
-            normalized_path,
-            _standard_file,
-            _standard_latest,
-            normalized,
-            _standard,
-        ) = process_pool.process_pool(downloaded_csv)
-
+        (_, normalized_path, _, _, normalized, _) = process_pool.process_pool(downloaded_csv)
         wnba_dates = eligible_wnba_dates(normalized, current)
         mlb_dates = eligible_mlb_dates(normalized, current)
-        wnba_runs = [
-            run_wnba_pipeline(normalized_path, slate, WNBA_HISTORY, MODEL_RUNS)
-            for slate in wnba_dates
-        ]
-        mlb_runs = [
-            run_mlb_pipeline(normalized_path, slate, MLB_HISTORY, MODEL_RUNS)
-            for slate in mlb_dates
-        ]
-
+        wnba_runs = [run_wnba_pipeline(normalized_path, day, WNBA_HISTORY, MODEL_RUNS) for day in wnba_dates]
+        mlb_runs = [run_mlb_with_context(normalized_path, day) for day in mlb_dates]
         manifest = {
             "captured_at": current.astimezone(CENTRAL).isoformat(),
-            "raw_path": str(raw_path),
-            "downloaded_csv": str(downloaded_csv),
-            "normalized_path": str(normalized_path),
-            "all_sport_rows": all_sport_rows,
+            "raw_path": str(raw_path), "downloaded_csv": str(downloaded_csv),
+            "normalized_path": str(normalized_path), "all_sport_rows": all_sport_rows,
             "normalized_mlb_wnba_rows": len(normalized),
             "leagues": normalized["league"].value_counts().to_dict(),
-            "wnba_dates_routed": wnba_dates,
-            "wnba_runs": wnba_runs,
-            "mlb_dates_routed": mlb_dates,
-            "mlb_runs": mlb_runs,
+            "wnba_dates_routed": wnba_dates, "wnba_runs": wnba_runs,
+            "mlb_dates_routed": mlb_dates, "mlb_runs": mlb_runs,
             "recommendations_enabled": False,
         }
         manifest_path = RUNTIME_ROOT / "latest_capture_manifest.json"
@@ -119,11 +115,7 @@ def main() -> None:
         print("Dry-run validates imports only; no network request was made.")
         return
     result = run_hourly_capture()
-    print("=" * 70)
-    print("SPORTS HUB PRIZEPICKS HOURLY CAPTURE")
-    print("=" * 70)
     print(f"All-sport rows: {result['all_sport_rows']:,}")
-    print(f"Normalized MLB/WNBA rows: {result['normalized_mlb_wnba_rows']:,}")
     print(f"WNBA dates routed: {result['wnba_dates_routed']}")
     print(f"MLB dates routed: {result['mlb_dates_routed']}")
     print("Recommendations remain disabled.")
