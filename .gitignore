@@ -1,4 +1,4 @@
-# Python cache
+﻿# Python cache
 __pycache__/
 *.py[cod]
 *.pyo
@@ -39,7 +39,12 @@ legacy/
 /data/exports/*.csv
 /data/mlb/*.csv
 /data/wnba/*.csv
-/backups/*/
-
+/backups/*
+!/backups/.gitkeep
 # Generated model decision boards
 data/model_runs/*.csv
+
+# Local database backups
+/backups/*
+!/backups/.gitkeep
+
