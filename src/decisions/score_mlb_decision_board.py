@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import re
@@ -251,7 +251,10 @@ def score_board(board_path: Path, history_path: Path, output_path: Path) -> int:
         raise ValueError(f"MLB history missing columns: {', '.join(missing)}")
 
     history, slate = filter_pregame(board, history)
-    history = history.drop_duplicates(["RESULT_DATE", "PLAYER_NAME", "PLAYER_TYPE"], keep="last")
+    dedup_columns = ["RESULT_DATE", "PLAYER_NAME", "PLAYER_TYPE"]
+    if "GAME_ID" in history.columns and history["GAME_ID"].notna().any():
+        dedup_columns.insert(1, "GAME_ID")
+    history = history.drop_duplicates(dedup_columns, keep="last")
     history = history.sort_values("RESULT_DATE")
     history["_key"] = history["PLAYER_NAME"].map(normalize_name)
     board["_key"] = board["player"].map(normalize_name)
@@ -328,3 +331,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
