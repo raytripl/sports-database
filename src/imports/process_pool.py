@@ -87,8 +87,13 @@ def process_pool(source_file: Path) -> tuple[Path, Path, pd.DataFrame]:
         utc=True,
     )
 
+    captured_source = (
+        dataframe["captured_at_utc"]
+        if "captured_at_utc" in dataframe.columns
+        else dataframe.get("downloaded_at_utc")
+    )
     dataframe["captured_at_utc"] = pd.to_datetime(
-        dataframe.get("captured_at_utc"),
+        captured_source,
         errors="coerce",
         utc=True,
     )
@@ -167,58 +172,58 @@ def process_pool(source_file: Path) -> tuple[Path, Path, pd.DataFrame]:
     )
 
     dataframe.to_csv(processed_file, index=False)
-dataframe.to_csv(latest_file, index=False)
+    dataframe.to_csv(latest_file, index=False)
 
-standard_columns = [
-    "slate_date",
-    "league",
-    "player_name",
-    "team",
-    "position",
-    "stat_type",
-    "line_score",
-    "start_time",
-    "game_description",
-    "projection_id",
-    "player_id",
-    "prop_key",
-]
-
-standard_board = dataframe[
-    dataframe["is_standard_line"].eq(True)
-].copy()
-
-standard_board = standard_board[
-    [
-        column
-        for column in standard_columns
-        if column in standard_board.columns
+    standard_columns = [
+        "slate_date",
+        "league",
+        "player_name",
+        "team",
+        "position",
+        "stat_type",
+        "line_score",
+        "start_time",
+        "game_description",
+        "projection_id",
+        "player_id",
+        "prop_key",
     ]
-]
 
-standard_file = (
-    PROCESSED_DIR
-    / f"raymond_standard_board_{timestamp}.csv"
-)
+    standard_board = dataframe[
+        dataframe["is_standard_line"].eq(True)
+    ].copy()
 
-standard_latest_file = (
-    PROCESSED_DIR
-    / "raymond_standard_board_latest.csv"
-)
+    standard_board = standard_board[
+        [
+            column
+            for column in standard_columns
+            if column in standard_board.columns
+        ]
+    ]
 
-standard_board.to_csv(standard_file, index=False)
-standard_board.to_csv(standard_latest_file, index=False)
+    standard_file = (
+        PROCESSED_DIR
+        / f"raymond_standard_board_{timestamp}.csv"
+    )
 
-shutil.copy2(source_file, archive_file)
+    standard_latest_file = (
+        PROCESSED_DIR
+        / "raymond_standard_board_latest.csv"
+    )
 
-return (
-    processed_file,
-    latest_file,
-    standard_file,
-    standard_latest_file,
-    dataframe,
-    standard_board,
-)
+    standard_board.to_csv(standard_file, index=False)
+    standard_board.to_csv(standard_latest_file, index=False)
+
+    shutil.copy2(source_file, archive_file)
+
+    return (
+        processed_file,
+        latest_file,
+        standard_file,
+        standard_latest_file,
+        dataframe,
+        standard_board,
+    )
 
 def main() -> int:
     parser = argparse.ArgumentParser(
