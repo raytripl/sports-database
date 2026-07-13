@@ -25,7 +25,8 @@ REQUIRED_COLUMNS = {
     "start_time",
 }
 
-SUPPORTED_SPORTS = {"MLB", "WNBA"}
+ACTIVE_MODEL_SPORTS = {"MLB", "WNBA"}
+UNSUPPORTED_STATUS = "UNSUPPORTED_PASS"
 
 
 def newest_csv() -> Path:
@@ -98,9 +99,15 @@ def process_pool(source_file: Path) -> tuple[Path, Path, pd.DataFrame]:
         utc=True,
     )
 
-    dataframe = dataframe[
-        dataframe["league"].isin(SUPPORTED_SPORTS)
-    ].copy()
+    # Preserve every exported league. Only validated sports are routed
+    # into a scoring pipeline; all others remain fail-closed.
+    dataframe["model_status"] = dataframe["league"].map(
+        lambda league: (
+            "ACTIVE_BASELINE"
+            if league in ACTIVE_MODEL_SPORTS
+            else UNSUPPORTED_STATUS
+        )
+    )
 
     dataframe = dataframe[
         dataframe["player_name"].ne("")
@@ -187,11 +194,30 @@ def process_pool(source_file: Path) -> tuple[Path, Path, pd.DataFrame]:
         "projection_id",
         "player_id",
         "prop_key",
+        "model_status",
     ]
 
     standard_board = dataframe[
         dataframe["is_standard_line"].eq(True)
     ].copy()
+
+    unsupported_queue = standard_board[
+        standard_board["model_status"].eq(UNSUPPORTED_STATUS)
+    ].copy()
+    unsupported_queue["direction"] = "PASS"
+    unsupported_queue["grade"] = "UNSUPPORTED"
+    unsupported_queue["recommended"] = 0
+    unsupported_queue["decision_reason"] = (
+        "No validated Sports Hub model for this league"
+    )
+    unsupported_queue.to_csv(
+        PROCESSED_DIR / f"raymond_unsupported_queue_{timestamp}.csv",
+        index=False,
+    )
+    unsupported_queue.to_csv(
+        PROCESSED_DIR / "raymond_unsupported_queue_latest.csv",
+        index=False,
+    )
 
     standard_board = standard_board[
         [
@@ -252,7 +278,7 @@ def main() -> int:
     		standard_board,
 	) = process_pool(source_file)
 
-        print(f"[SUCCESS] Imported {len(dataframe):,} MLB/WNBA projections.")
+        print(f"[SUCCESS] Imported {len(dataframe):,} all-sport projections.")
 
         print("\nSPORT COUNTS")
         print(dataframe["league"].value_counts().to_string())

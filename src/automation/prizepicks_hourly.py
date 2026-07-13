@@ -145,8 +145,17 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
             "acquisition_mode": mode, "direct_api_error": direct_error,
             "raw_path": str(raw_path), "downloaded_csv": str(downloaded_csv),
             "normalized_path": str(normalized_path), "all_sport_rows": all_sport_rows,
-            "normalized_mlb_wnba_rows": len(normalized),
+            "normalized_rows": len(normalized),
+            "normalized_mlb_wnba_rows": int(
+                normalized["league"].astype(str).str.upper().isin({"MLB", "WNBA"}).sum()
+            ),
             "leagues": normalized["league"].value_counts().to_dict(),
+            "model_status_counts": normalized["model_status"].value_counts().to_dict(),
+            "unsupported_sports": sorted(
+                normalized.loc[
+                    normalized["model_status"].eq("UNSUPPORTED_PASS"), "league"
+                ].dropna().astype(str).unique().tolist()
+            ),
             "wnba_dates_routed": wnba_dates, "wnba_runs": wnba_runs,
             "mlb_dates_routed": mlb_dates, "mlb_runs": mlb_runs,
             "recommendations_enabled": False,
