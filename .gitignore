@@ -55,3 +55,6 @@ data/model_runs/*.json
 
 # Generated multi-slate calibration reports
 data/calibration/
+
+# Resumable MLB boxscore cache
+/data/mlb/backfill_cache/
