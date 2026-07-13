@@ -1,0 +1,2 @@
+player,team,injury_status,lineup_confirmed,starter_confirmed,expected_minutes,minutes_restriction,captured_at,source,notes
+Example Player,EX,ACTIVE,yes,yes,32,,2026-07-13T17:00:00-05:00,Official injury report,Replace this example row

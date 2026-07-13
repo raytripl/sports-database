@@ -240,6 +240,28 @@ CREATE TABLE IF NOT EXISTS coach_profiles (
 );
 
 
+CREATE TABLE IF NOT EXISTS wnba_availability_snapshots (
+    availability_id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    snapshot_id TEXT NOT NULL,
+    slate_date TEXT NOT NULL,
+    captured_at TEXT NOT NULL,
+
+    player TEXT NOT NULL,
+    team TEXT,
+    injury_status TEXT NOT NULL,
+    lineup_confirmed INTEGER,
+    starter_confirmed INTEGER,
+    expected_minutes REAL,
+    minutes_restriction TEXT,
+
+    source TEXT NOT NULL,
+    notes TEXT,
+
+    UNIQUE (snapshot_id, player, captured_at, source)
+);
+
+
 CREATE INDEX IF NOT EXISTS idx_decisions_slate
 ON model_decisions (slate_date, sport);
 
@@ -254,6 +276,9 @@ ON prop_results (status);
 
 CREATE INDEX IF NOT EXISTS idx_lines_player
 ON historical_prop_lines (slate_date, player, prop_type);
+
+CREATE INDEX IF NOT EXISTS idx_wnba_availability_snapshot
+ON wnba_availability_snapshots (snapshot_id, player, captured_at);
 """
 
 
