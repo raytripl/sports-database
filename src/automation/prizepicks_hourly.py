@@ -24,9 +24,9 @@ WNBA_HISTORY = PROJECT_ROOT / "data" / "wnba" / "WNBA_RESULTS_HISTORY.csv"
 MLB_HISTORY = PROJECT_ROOT / "data" / "mlb" / "MLB_RESULTS_HISTORY.csv"
 LOCK_PATH = RUNTIME_ROOT / "hourly_capture.lock"
 CENTRAL = ZoneInfo("America/Chicago")
-REQUIRED_EXPORT_COLUMNS = {
-    "projection_id", "league", "player_name", "stat_type", "line_score",
-}
+# A fallback must satisfy the downstream normalizer, not merely look
+# vaguely like a PrizePicks file.
+REQUIRED_EXPORT_COLUMNS = set(process_pool.REQUIRED_COLUMNS)
 
 
 @contextmanager

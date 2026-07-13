@@ -27,7 +27,8 @@ class PrizePicksFallbackTests(unittest.TestCase):
     def _write_export(self, path: Path, player: str = "Player") -> None:
         pd.DataFrame([{
             "projection_id": "1", "league": "WNBA", "player_name": player,
-            "stat_type": "Points", "line_score": 10.5,
+            "team": "AAA", "stat_type": "Points", "line_score": 10.5,
+            "odds_type": "standard", "start_time": "2026-07-13T20:00:00Z",
         }]).to_csv(path, index=False)
 
     def test_rejects_unrelated_csv(self):
