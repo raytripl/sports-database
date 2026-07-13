@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sports Hub Exporter</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <h1>Sports Hub</h1>
+    <p class="subtitle">PrizePicks Board Exporter</p>
+
+    <section class="status-card">
+      <div id="status">Checking for a captured board…</div>
+      <div id="details"></div>
+    </section>
+
+    <label for="sports">Sports to export</label>
+    <input id="sports" type="text" value=""
+           placeholder="Leave blank for captured league, or enter TENNIS">
+
+    <button id="export" disabled>Export CSV</button>
+    <button id="exportJson" class="secondary" disabled>Export Raw JSON</button>
+    <button id="clear" class="ghost">Clear Capture</button>
+
+    <p class="help">
+      Choose a PrizePicks league tab, wait for capture, then export. Leave Sports blank to keep every captured row.
+    </p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
