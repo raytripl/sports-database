@@ -40,3 +40,6 @@ legacy/
 /data/mlb/*.csv
 /data/wnba/*.csv
 /backups/*/
+
+# Generated model decision boards
+data/model_runs/*.csv
