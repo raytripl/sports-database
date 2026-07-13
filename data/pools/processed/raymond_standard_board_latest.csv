@@ -1,0 +1,142 @@
+slate_date,league,player_name,team,position,stat_type,line_score,start_time,game_description,projection_id,player_id,prop_key
+2026-07-13,WNBA,Allisha Gray,ATL,G,Fantasy Score,33.5,2026-07-13 23:00:00+00:00,LAS,13123775,237832,WNBA|allisha gray|fantasy score|33.5|standard
+2026-07-13,WNBA,Allisha Gray,ATL,G,Points,20.5,2026-07-13 23:00:00+00:00,LAS,13119669,237832,WNBA|allisha gray|points|20.5|standard
+2026-07-13,WNBA,Allisha Gray,ATL,G,Pts+Rebs,24.5,2026-07-13 23:00:00+00:00,LAS,13119272,237832,WNBA|allisha gray|pts+rebs|24.5|standard
+2026-07-13,WNBA,Allisha Gray,ATL,G,Pts+Rebs+Asts,27.5,2026-07-13 23:00:00+00:00,LAS,13119291,237832,WNBA|allisha gray|pts+rebs+asts|27.5|standard
+2026-07-13,WNBA,Allisha Gray,ATL,G,Rebounds,4.0,2026-07-13 23:00:00+00:00,LAS,13123756,237832,WNBA|allisha gray|rebounds|4.0|standard
+2026-07-13,WNBA,Allisha Gray + Dearica Hamby,ATL/LAS,G,Points (Combo),37.5,2026-07-13 23:00:00+00:00,LAS/ATL,13124263,328311,WNBA|allisha gray + dearica hamby|points (combo)|37.5|standard
+2026-07-13,WNBA,Allisha Gray + Nneka Ogwumike,ATL/LAS,G,Points (Combo),38.5,2026-07-13 23:00:00+00:00,LAS/ATL,13124257,328308,WNBA|allisha gray + nneka ogwumike|points (combo)|38.5|standard
+2026-07-13,WNBA,Allisha Gray + Rae Burrell,ATL/LAS,G,Points (Combo),35.5,2026-07-13 23:00:00+00:00,LAS/ATL,13124273,328316,WNBA|allisha gray + rae burrell|points (combo)|35.5|standard
+2026-07-13,WNBA,Ariel Atkins,LAS,G,Points,10.5,2026-07-13 23:00:00+00:00,ATL,13119019,317325,WNBA|ariel atkins|points|10.5|standard
+2026-07-13,WNBA,Ariel Atkins,LAS,G,Pts+Rebs,13.5,2026-07-13 23:00:00+00:00,ATL,13124297,317325,WNBA|ariel atkins|pts+rebs|13.5|standard
+2026-07-13,WNBA,Ariel Atkins,LAS,G,Pts+Rebs+Asts,15.5,2026-07-13 23:00:00+00:00,ATL,13124300,317325,WNBA|ariel atkins|pts+rebs+asts|15.5|standard
+2026-07-13,WNBA,Dearica Hamby,LAS,F,Fantasy Score,33.5,2026-07-13 23:00:00+00:00,ATL,13123780,237841,WNBA|dearica hamby|fantasy score|33.5|standard
+2026-07-13,WNBA,Dearica Hamby,LAS,F,Points,16.0,2026-07-13 23:00:00+00:00,ATL,13119958,237841,WNBA|dearica hamby|points|16.0|standard
+2026-07-13,WNBA,Dearica Hamby,LAS,F,Pts+Rebs,24.5,2026-07-13 23:00:00+00:00,ATL,13118975,237841,WNBA|dearica hamby|pts+rebs|24.5|standard
+2026-07-13,WNBA,Dearica Hamby,LAS,F,Pts+Rebs+Asts,27.5,2026-07-13 23:00:00+00:00,ATL,13118994,237841,WNBA|dearica hamby|pts+rebs+asts|27.5|standard
+2026-07-13,WNBA,Dearica Hamby,LAS,F,Rebounds,8.0,2026-07-13 23:00:00+00:00,ATL,13123759,237841,WNBA|dearica hamby|rebounds|8.0|standard
+2026-07-13,WNBA,Erica Wheeler,LAS,G,Assists,5.5,2026-07-13 23:00:00+00:00,ATL,13124325,317929,WNBA|erica wheeler|assists|5.5|standard
+2026-07-13,WNBA,Erica Wheeler,LAS,G,Points,8.5,2026-07-13 23:00:00+00:00,ATL,13124322,317929,WNBA|erica wheeler|points|8.5|standard
+2026-07-13,WNBA,Erica Wheeler,LAS,G,Pts+Asts,14.5,2026-07-13 23:00:00+00:00,ATL,13124324,317929,WNBA|erica wheeler|pts+asts|14.5|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Assists,8.0,2026-07-13 23:00:00+00:00,LAS,13121301,197522,WNBA|jordin canada|assists|8.0|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Fantasy Score,33.0,2026-07-13 23:00:00+00:00,LAS,13123776,197522,WNBA|jordin canada|fantasy score|33.0|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Points,11.5,2026-07-13 23:00:00+00:00,LAS,13119323,197522,WNBA|jordin canada|points|11.5|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Pts+Asts,19.5,2026-07-13 23:00:00+00:00,LAS,13119276,197522,WNBA|jordin canada|pts+asts|19.5|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Pts+Rebs,15.5,2026-07-13 23:00:00+00:00,LAS,13119288,197522,WNBA|jordin canada|pts+rebs|15.5|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Pts+Rebs+Asts,24.0,2026-07-13 23:00:00+00:00,LAS,13119303,197522,WNBA|jordin canada|pts+rebs+asts|24.0|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Rebounds,4.0,2026-07-13 23:00:00+00:00,LAS,13123757,197522,WNBA|jordin canada|rebounds|4.0|standard
+2026-07-13,WNBA,Jordin Canada,ATL,G,Rebs+Asts,12.0,2026-07-13 23:00:00+00:00,LAS,13119334,197522,WNBA|jordin canada|rebs+asts|12.0|standard
+2026-07-13,WNBA,Naz Hillmon,ATL,F,Fantasy Score,22.5,2026-07-13 23:00:00+00:00,LAS,13123777,65842,WNBA|naz hillmon|fantasy score|22.5|standard
+2026-07-13,WNBA,Naz Hillmon,ATL,F,Points,10.5,2026-07-13 23:00:00+00:00,LAS,13119383,65842,WNBA|naz hillmon|points|10.5|standard
+2026-07-13,WNBA,Naz Hillmon,ATL,F,Pts+Rebs,17.0,2026-07-13 23:00:00+00:00,LAS,13119274,65842,WNBA|naz hillmon|pts+rebs|17.0|standard
+2026-07-13,WNBA,Naz Hillmon,ATL,F,Pts+Rebs+Asts,18.5,2026-07-13 23:00:00+00:00,LAS,13121307,65842,WNBA|naz hillmon|pts+rebs+asts|18.5|standard
+2026-07-13,WNBA,Naz Hillmon,ATL,F,Rebounds,6.0,2026-07-13 23:00:00+00:00,LAS,13123758,65842,WNBA|naz hillmon|rebounds|6.0|standard
+2026-07-13,WNBA,Naz Hillmon + Dearica Hamby,ATL/LAS,F,Rebounds (Combo),14.0,2026-07-13 23:00:00+00:00,LAS/ATL,13124279,328321,WNBA|naz hillmon + dearica hamby|rebounds (combo)|14.0|standard
+2026-07-13,WNBA,Naz Hillmon + Nneka Ogwumike,ATL/LAS,F,Rebounds (Combo),15.0,2026-07-13 23:00:00+00:00,LAS/ATL,13124280,328322,WNBA|naz hillmon + nneka ogwumike|rebounds (combo)|15.0|standard
+2026-07-13,WNBA,Nneka Ogwumike,LAS,F,Fantasy Score,34.5,2026-07-13 23:00:00+00:00,ATL,13123782,64380,WNBA|nneka ogwumike|fantasy score|34.5|standard
+2026-07-13,WNBA,Nneka Ogwumike,LAS,F,Points,17.5,2026-07-13 23:00:00+00:00,ATL,13118999,64380,WNBA|nneka ogwumike|points|17.5|standard
+2026-07-13,WNBA,Nneka Ogwumike,LAS,F,Pts+Asts,20.0,2026-07-13 23:00:00+00:00,ATL,13118962,64380,WNBA|nneka ogwumike|pts+asts|20.0|standard
+2026-07-13,WNBA,Nneka Ogwumike,LAS,F,Pts+Rebs,26.5,2026-07-13 23:00:00+00:00,ATL,13118967,64380,WNBA|nneka ogwumike|pts+rebs|26.5|standard
+2026-07-13,WNBA,Nneka Ogwumike,LAS,F,Pts+Rebs+Asts,29.5,2026-07-13 23:00:00+00:00,ATL,13118970,64380,WNBA|nneka ogwumike|pts+rebs+asts|29.5|standard
+2026-07-13,WNBA,Nneka Ogwumike,LAS,F,Rebounds,8.5,2026-07-13 23:00:00+00:00,ATL,13118987,64380,WNBA|nneka ogwumike|rebounds|8.5|standard
+2026-07-13,WNBA,Nneka Ogwumike,LAS,F,Rebs+Asts,12.0,2026-07-13 23:00:00+00:00,ATL,13119943,64380,WNBA|nneka ogwumike|rebs+asts|12.0|standard
+2026-07-13,WNBA,Rae Burrell,LAS,G-F,Points,14.5,2026-07-13 23:00:00+00:00,ATL,13118984,69803,WNBA|rae burrell|points|14.5|standard
+2026-07-13,WNBA,Rae Burrell,LAS,G-F,Pts+Asts,17.5,2026-07-13 23:00:00+00:00,ATL,13124493,69803,WNBA|rae burrell|pts+asts|17.5|standard
+2026-07-13,WNBA,Rae Burrell,LAS,G-F,Pts+Rebs,16.5,2026-07-13 23:00:00+00:00,ATL,13124340,69803,WNBA|rae burrell|pts+rebs|16.5|standard
+2026-07-13,WNBA,Rae Burrell,LAS,G-F,Pts+Rebs+Asts,20.5,2026-07-13 23:00:00+00:00,ATL,13124350,69803,WNBA|rae burrell|pts+rebs+asts|20.5|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Assists,3.5,2026-07-13 23:00:00+00:00,LAS,13119378,237831,WNBA|rhyne howard|assists|3.5|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Fantasy Score,37.5,2026-07-13 23:00:00+00:00,LAS,13123778,237831,WNBA|rhyne howard|fantasy score|37.5|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Points,19.5,2026-07-13 23:00:00+00:00,LAS,13119326,237831,WNBA|rhyne howard|points|19.5|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Pts+Asts,23.0,2026-07-13 23:00:00+00:00,LAS,13119329,237831,WNBA|rhyne howard|pts+asts|23.0|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Pts+Rebs,24.0,2026-07-13 23:00:00+00:00,LAS,13119797,237831,WNBA|rhyne howard|pts+rebs|24.0|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Pts+Rebs+Asts,28.5,2026-07-13 23:00:00+00:00,LAS,13119338,237831,WNBA|rhyne howard|pts+rebs+asts|28.5|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Rebounds,4.5,2026-07-13 23:00:00+00:00,LAS,13119352,237831,WNBA|rhyne howard|rebounds|4.5|standard
+2026-07-13,WNBA,Rhyne Howard,ATL,G,Rebs+Asts,8.0,2026-07-13 23:00:00+00:00,LAS,13121304,237831,WNBA|rhyne howard|rebs+asts|8.0|standard
+2026-07-13,WNBA,Rhyne Howard + Dearica Hamby,ATL/LAS,G,Points (Combo),35.5,2026-07-13 23:00:00+00:00,LAS/ATL,13124266,328313,WNBA|rhyne howard + dearica hamby|points (combo)|35.5|standard
+2026-07-13,WNBA,Rhyne Howard + Nneka Ogwumike,ATL/LAS,G,Assists (Combo),6.5,2026-07-13 23:00:00+00:00,LAS/ATL,13124282,328310,WNBA|rhyne howard + nneka ogwumike|assists (combo)|6.5|standard
+2026-07-13,WNBA,Rhyne Howard + Nneka Ogwumike,ATL/LAS,G,Points (Combo),36.5,2026-07-13 23:00:00+00:00,LAS/ATL,13124262,328310,WNBA|rhyne howard + nneka ogwumike|points (combo)|36.5|standard
+2026-07-13,WNBA,Rhyne Howard + Rae Burrell,ATL/LAS,G,Points (Combo),34.5,2026-07-13 23:00:00+00:00,LAS/ATL,13124267,328314,WNBA|rhyne howard + rae burrell|points (combo)|34.5|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Assists,8.0,2026-07-14 01:00:00+00:00,MIN,13121494,237863,WNBA|alyssa thomas|assists|8.0|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Fantasy Score,37.5,2026-07-14 01:00:00+00:00,MIN,13123662,237863,WNBA|alyssa thomas|fantasy score|37.5|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Points,13.5,2026-07-14 01:00:00+00:00,MIN,13119357,237863,WNBA|alyssa thomas|points|13.5|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Pts+Asts,22.5,2026-07-14 01:00:00+00:00,MIN,13120009,237863,WNBA|alyssa thomas|pts+asts|22.5|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Pts+Rebs,21.0,2026-07-14 01:00:00+00:00,MIN,13119279,237863,WNBA|alyssa thomas|pts+rebs|21.0|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Pts+Rebs+Asts,29.5,2026-07-14 01:00:00+00:00,MIN,13119362,237863,WNBA|alyssa thomas|pts+rebs+asts|29.5|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Rebounds,7.0,2026-07-14 01:00:00+00:00,MIN,13121497,237863,WNBA|alyssa thomas|rebounds|7.0|standard
+2026-07-13,WNBA,Alyssa Thomas,PHX,F,Rebs+Asts,15.5,2026-07-14 01:00:00+00:00,MIN,13119349,237863,WNBA|alyssa thomas|rebs+asts|15.5|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Assists,4.0,2026-07-14 01:00:00+00:00,PHX,13123557,237978,WNBA|courtney williams|assists|4.0|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Fantasy Score,30.5,2026-07-14 01:00:00+00:00,PHX,13123658,237978,WNBA|courtney williams|fantasy score|30.5|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Points,16.5,2026-07-14 01:00:00+00:00,PHX,13120042,237978,WNBA|courtney williams|points|16.5|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Pts+Asts,20.5,2026-07-14 01:00:00+00:00,PHX,13119682,237978,WNBA|courtney williams|pts+asts|20.5|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Pts+Rebs,21.5,2026-07-14 01:00:00+00:00,PHX,13119680,237978,WNBA|courtney williams|pts+rebs|21.5|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Pts+Rebs+Asts,25.5,2026-07-14 01:00:00+00:00,PHX,13119689,237978,WNBA|courtney williams|pts+rebs+asts|25.5|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Rebounds,5.0,2026-07-14 01:00:00+00:00,PHX,13123555,237978,WNBA|courtney williams|rebounds|5.0|standard
+2026-07-13,WNBA,Courtney Williams,MIN,G,Rebs+Asts,9.0,2026-07-14 01:00:00+00:00,PHX,13121425,237978,WNBA|courtney williams|rebs+asts|9.0|standard
+2026-07-13,WNBA,Courtney Williams + Alyssa Thomas,MIN/PHX,G,Points (Combo),30.0,2026-07-14 01:00:00+00:00,PHX/MIN,13124632,317626,WNBA|courtney williams + alyssa thomas|points (combo)|30.0|standard
+2026-07-13,WNBA,Courtney Williams + Kahleah Copper,MIN/PHX,G,Points (Combo),36.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124614,317624,WNBA|courtney williams + kahleah copper|points (combo)|36.5|standard
+2026-07-13,WNBA,Courtney Williams + Valeriane Ayayi,MIN/PHX,G,Points (Combo),27.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124634,328335,WNBA|courtney williams + valeriane ayayi|points (combo)|27.5|standard
+2026-07-13,WNBA,DeWanna Bonner,PHX,F-G,Points,9.5,2026-07-14 01:00:00+00:00,MIN,13124421,253708,WNBA|dewanna bonner|points|9.5|standard
+2026-07-13,WNBA,DeWanna Bonner,PHX,F-G,Pts+Rebs,15.0,2026-07-14 01:00:00+00:00,MIN,13124462,253708,WNBA|dewanna bonner|pts+rebs|15.0|standard
+2026-07-13,WNBA,DeWanna Bonner,PHX,F-G,Rebounds,5.5,2026-07-14 01:00:00+00:00,MIN,13124416,253708,WNBA|dewanna bonner|rebounds|5.5|standard
+2026-07-13,WNBA,Kahleah Copper,PHX,G-F,Fantasy Score,28.5,2026-07-14 01:00:00+00:00,MIN,13123664,237861,WNBA|kahleah copper|fantasy score|28.5|standard
+2026-07-13,WNBA,Kahleah Copper,PHX,G-F,Points,19.5,2026-07-14 01:00:00+00:00,MIN,13119307,237861,WNBA|kahleah copper|points|19.5|standard
+2026-07-13,WNBA,Kahleah Copper,PHX,G-F,Pts+Rebs,23.5,2026-07-14 01:00:00+00:00,MIN,13119316,237861,WNBA|kahleah copper|pts+rebs|23.5|standard
+2026-07-13,WNBA,Kahleah Copper,PHX,G-F,Pts+Rebs+Asts,25.5,2026-07-14 01:00:00+00:00,MIN,13119371,237861,WNBA|kahleah copper|pts+rebs+asts|25.5|standard
+2026-07-13,WNBA,Kahleah Copper,PHX,G-F,Rebounds,4.0,2026-07-14 01:00:00+00:00,MIN,13123556,237861,WNBA|kahleah copper|rebounds|4.0|standard
+2026-07-13,WNBA,Kayla McBride,MIN,G,Fantasy Score,27.5,2026-07-14 01:00:00+00:00,PHX,13123659,237839,WNBA|kayla mcbride|fantasy score|27.5|standard
+2026-07-13,WNBA,Kayla McBride,MIN,G,Points,16.5,2026-07-14 01:00:00+00:00,PHX,13124865,237839,WNBA|kayla mcbride|points|16.5|standard
+2026-07-13,WNBA,Kayla McBride,MIN,G,Pts+Asts,19.0,2026-07-14 01:00:00+00:00,PHX,13119712,237839,WNBA|kayla mcbride|pts+asts|19.0|standard
+2026-07-13,WNBA,Kayla McBride,MIN,G,Pts+Rebs,19.5,2026-07-14 01:00:00+00:00,PHX,13121441,237839,WNBA|kayla mcbride|pts+rebs|19.5|standard
+2026-07-13,WNBA,Kayla McBride,MIN,G,Pts+Rebs+Asts,22.5,2026-07-14 01:00:00+00:00,PHX,13119686,237839,WNBA|kayla mcbride|pts+rebs+asts|22.5|standard
+2026-07-13,WNBA,Kayla McBride,MIN,G,Rebs+Asts,6.5,2026-07-14 01:00:00+00:00,PHX,13119674,237839,WNBA|kayla mcbride|rebs+asts|6.5|standard
+2026-07-13,WNBA,Kayla McBride + Alyssa Thomas,MIN/PHX,G,Points (Combo),30.0,2026-07-14 01:00:00+00:00,PHX/MIN,13124615,317620,WNBA|kayla mcbride + alyssa thomas|points (combo)|30.0|standard
+2026-07-13,WNBA,Kayla McBride + Kahleah Copper,MIN/PHX,G,Points (Combo),35.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124613,317618,WNBA|kayla mcbride + kahleah copper|points (combo)|35.5|standard
+2026-07-13,WNBA,Kayla McBride + Valeriane Ayayi,MIN/PHX,G,Points (Combo),26.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124633,328334,WNBA|kayla mcbride + valeriane ayayi|points (combo)|26.5|standard
+2026-07-13,WNBA,Monique Akoa Makani,PHX,G,Points,9.5,2026-07-14 01:00:00+00:00,MIN,13124528,240019,WNBA|monique akoa makani|points|9.5|standard
+2026-07-13,WNBA,Monique Akoa Makani,PHX,G,Pts+Rebs+Asts,14.5,2026-07-14 01:00:00+00:00,MIN,13124520,240019,WNBA|monique akoa makani|pts+rebs+asts|14.5|standard
+2026-07-13,WNBA,Natasha Howard,MIN,F,Fantasy Score,33.5,2026-07-14 01:00:00+00:00,PHX,13123660,316212,WNBA|natasha howard|fantasy score|33.5|standard
+2026-07-13,WNBA,Natasha Howard,MIN,F,Points,15.5,2026-07-14 01:00:00+00:00,PHX,13115836,316212,WNBA|natasha howard|points|15.5|standard
+2026-07-13,WNBA,Natasha Howard,MIN,F,Pts+Asts,18.5,2026-07-14 01:00:00+00:00,PHX,13115800,316212,WNBA|natasha howard|pts+asts|18.5|standard
+2026-07-13,WNBA,Natasha Howard,MIN,F,Pts+Rebs,24.5,2026-07-14 01:00:00+00:00,PHX,13115806,316212,WNBA|natasha howard|pts+rebs|24.5|standard
+2026-07-13,WNBA,Natasha Howard,MIN,F,Pts+Rebs+Asts,26.5,2026-07-14 01:00:00+00:00,PHX,13115820,316212,WNBA|natasha howard|pts+rebs+asts|26.5|standard
+2026-07-13,WNBA,Natasha Howard,MIN,F,Rebounds,8.0,2026-07-14 01:00:00+00:00,PHX,13121427,316212,WNBA|natasha howard|rebounds|8.0|standard
+2026-07-13,WNBA,Natasha Howard,MIN,F,Rebs+Asts,10.5,2026-07-14 01:00:00+00:00,PHX,13117014,316212,WNBA|natasha howard|rebs+asts|10.5|standard
+2026-07-13,WNBA,Natasha Howard + Alyssa Thomas,MIN/PHX,F,Rebounds (Combo),15.0,2026-07-14 01:00:00+00:00,PHX/MIN,13124636,317631,WNBA|natasha howard + alyssa thomas|rebounds (combo)|15.0|standard
+2026-07-13,WNBA,Natasha Howard + DeWanna Bonner,MIN/PHX,F,Rebounds (Combo),13.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124642,317636,WNBA|natasha howard + dewanna bonner|rebounds (combo)|13.5|standard
+2026-07-13,WNBA,Nia Coffey,MIN,F,Assists,2.5,2026-07-14 01:00:00+00:00,PHX,13124380,317261,WNBA|nia coffey|assists|2.5|standard
+2026-07-13,WNBA,Nia Coffey,MIN,F,Points,8.0,2026-07-14 01:00:00+00:00,PHX,13124382,317261,WNBA|nia coffey|points|8.0|standard
+2026-07-13,WNBA,Nia Coffey,MIN,F,Pts+Asts,10.5,2026-07-14 01:00:00+00:00,PHX,13124375,317261,WNBA|nia coffey|pts+asts|10.5|standard
+2026-07-13,WNBA,Nia Coffey,MIN,F,Pts+Rebs,13.5,2026-07-14 01:00:00+00:00,PHX,13124376,317261,WNBA|nia coffey|pts+rebs|13.5|standard
+2026-07-13,WNBA,Nia Coffey,MIN,F,Rebounds,5.5,2026-07-14 01:00:00+00:00,PHX,13124379,317261,WNBA|nia coffey|rebounds|5.5|standard
+2026-07-13,WNBA,Nia Coffey + Alyssa Thomas,MIN/PHX,F,Rebounds (Combo),12.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124637,328336,WNBA|nia coffey + alyssa thomas|rebounds (combo)|12.5|standard
+2026-07-13,WNBA,Nia Coffey + DeWanna Bonner,MIN/PHX,F,Rebounds (Combo),11.0,2026-07-14 01:00:00+00:00,PHX/MIN,13124641,328337,WNBA|nia coffey + dewanna bonner|rebounds (combo)|11.0|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Assists,6.0,2026-07-14 01:00:00+00:00,PHX,13116777,316224,WNBA|olivia miles|assists|6.0|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Fantasy Score,36.5,2026-07-14 01:00:00+00:00,PHX,13123661,316224,WNBA|olivia miles|fantasy score|36.5|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Points,18.5,2026-07-14 01:00:00+00:00,PHX,13115837,316224,WNBA|olivia miles|points|18.5|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Pts+Asts,24.5,2026-07-14 01:00:00+00:00,PHX,13116355,316224,WNBA|olivia miles|pts+asts|24.5|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Pts+Rebs,23.5,2026-07-14 01:00:00+00:00,PHX,13115804,316224,WNBA|olivia miles|pts+rebs|23.5|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Pts+Rebs+Asts,29.5,2026-07-14 01:00:00+00:00,PHX,13115819,316224,WNBA|olivia miles|pts+rebs+asts|29.5|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Rebounds,4.5,2026-07-14 01:00:00+00:00,PHX,13115832,316224,WNBA|olivia miles|rebounds|4.5|standard
+2026-07-13,WNBA,Olivia Miles,MIN,G,Rebs+Asts,10.5,2026-07-14 01:00:00+00:00,PHX,13119637,316224,WNBA|olivia miles|rebs+asts|10.5|standard
+2026-07-13,WNBA,Olivia Miles + Alyssa Thomas,MIN/PHX,G,Points (Combo),32.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124616,317640,WNBA|olivia miles + alyssa thomas|points (combo)|32.5|standard
+2026-07-13,WNBA,Olivia Miles + Kahleah Copper,MIN/PHX,G,Points (Combo),38.5,2026-07-14 01:00:00+00:00,PHX/MIN,13124617,328333,WNBA|olivia miles + kahleah copper|points (combo)|38.5|standard
+2026-07-13,WNBA,Valeriane Ayayi,PHX,F,Points,10.5,2026-07-14 01:00:00+00:00,MIN,13124480,318235,WNBA|valeriane ayayi|points|10.5|standard
+2026-07-13,WNBA,Valeriane Ayayi,PHX,F,Pts+Rebs,15.5,2026-07-14 01:00:00+00:00,MIN,13124477,318235,WNBA|valeriane ayayi|pts+rebs|15.5|standard
+2026-07-14,WNBA,Isabelle Harrison,TOR,F,Points,12.5,2026-07-14 23:00:00+00:00,WAS,13124883,323190,WNBA|isabelle harrison|points|12.5|standard
+2026-07-14,WNBA,Isabelle Harrison,TOR,F,Pts+Rebs,18.5,2026-07-14 23:00:00+00:00,WAS,13124875,323190,WNBA|isabelle harrison|pts+rebs|18.5|standard
+2026-07-14,WNBA,Kiki Iriafen,WAS,F,Points,14.5,2026-07-14 23:00:00+00:00,TOR,13124688,238169,WNBA|kiki iriafen|points|14.5|standard
+2026-07-14,WNBA,Kiki Iriafen,WAS,F,Pts+Rebs,24.0,2026-07-14 23:00:00+00:00,TOR,13124744,238169,WNBA|kiki iriafen|pts+rebs|24.0|standard
+2026-07-14,WNBA,Kiki Iriafen,WAS,F,Pts+Rebs+Asts,26.5,2026-07-14 23:00:00+00:00,TOR,13124685,238169,WNBA|kiki iriafen|pts+rebs+asts|26.5|standard
+2026-07-14,WNBA,Marina Mabrey,TOR,G,Points,22.5,2026-07-14 23:00:00+00:00,WAS,13124828,315802,WNBA|marina mabrey|points|22.5|standard
+2026-07-14,WNBA,Marina Mabrey,TOR,G,Pts+Asts,26.5,2026-07-14 23:00:00+00:00,WAS,13124821,315802,WNBA|marina mabrey|pts+asts|26.5|standard
+2026-07-14,WNBA,Marina Mabrey,TOR,G,Pts+Rebs,25.5,2026-07-14 23:00:00+00:00,WAS,13124813,315802,WNBA|marina mabrey|pts+rebs|25.5|standard
+2026-07-14,WNBA,Marina Mabrey,TOR,G,Pts+Rebs+Asts,30.5,2026-07-14 23:00:00+00:00,WAS,13124819,315802,WNBA|marina mabrey|pts+rebs+asts|30.5|standard
+2026-07-14,WNBA,Nyara Sabally,TOR,F,Points,10.5,2026-07-14 23:00:00+00:00,WAS,13124898,317177,WNBA|nyara sabally|points|10.5|standard
+2026-07-14,WNBA,Nyara Sabally,TOR,F,Pts+Rebs,15.0,2026-07-14 23:00:00+00:00,WAS,13124906,317177,WNBA|nyara sabally|pts+rebs|15.0|standard
+2026-07-14,WNBA,Nyara Sabally,TOR,F,Rebounds,4.5,2026-07-14 23:00:00+00:00,WAS,13124894,317177,WNBA|nyara sabally|rebounds|4.5|standard
+2026-07-14,WNBA,Sonia Citron,WAS,G,3-PT Made,1.5,2026-07-14 23:00:00+00:00,TOR,13124668,238241,WNBA|sonia citron|3-pt made|1.5|standard
+2026-07-14,WNBA,Sonia Citron,WAS,G,Points,17.5,2026-07-14 23:00:00+00:00,TOR,13124672,238241,WNBA|sonia citron|points|17.5|standard
+2026-07-14,WNBA,Sonia Citron,WAS,G,Pts+Asts,20.5,2026-07-14 23:00:00+00:00,TOR,13124650,238241,WNBA|sonia citron|pts+asts|20.5|standard
+2026-07-14,WNBA,Sonia Citron,WAS,G,Pts+Rebs,20.5,2026-07-14 23:00:00+00:00,TOR,13124655,238241,WNBA|sonia citron|pts+rebs|20.5|standard
+2026-07-14,WNBA,Sonia Citron,WAS,G,Pts+Rebs+Asts,24.5,2026-07-14 23:00:00+00:00,TOR,13124657,238241,WNBA|sonia citron|pts+rebs+asts|24.5|standard
+2026-07-14,WNBA,Sonia Citron,WAS,G,Rebs+Asts,6.5,2026-07-14 23:00:00+00:00,TOR,13124652,238241,WNBA|sonia citron|rebs+asts|6.5|standard
