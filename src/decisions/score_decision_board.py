@@ -6,6 +6,10 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.decisions.wnba_opportunity import calculate_opportunity_context
+from src.decisions.wnba_matchup import calculate_team_matchup_context
+from src.decisions.wnba_suppression import calculate_suppression_context
+
 
 PROP_TO_RESULT = {
     "Points": "PTS",
@@ -28,6 +32,28 @@ TEXT_COLUMNS = [
     "red_flags",
     "decision_reason",
 ]
+
+BASELINE_RED_FLAG = (
+    "Baseline only: current injuries, starters, role, matchup, and coaching "
+    "strategy are not verified"
+)
+
+REQUIRED_BOARD_COLUMNS = {
+    "decision_id",
+    "slate_date",
+    "player",
+    "prop_type",
+    "line",
+}
+
+REQUIRED_HISTORY_COLUMNS = {
+    "GAME_ID",
+    "GAME_DATE",
+    "PLAYER_NAME",
+    "TEAM_ABBREVIATION",
+    "MATCHUP",
+    "MIN",
+}
 
 
 def normalize_name(value: object) -> str:
@@ -165,6 +191,43 @@ def assign_grade(direction: str, score: float, sample_size: int) -> str:
     return "C"
 
 
+def require_columns(
+    frame: pd.DataFrame,
+    required: set[str],
+    label: str,
+) -> None:
+    missing = sorted(required - set(frame.columns))
+    if missing:
+        raise ValueError(f"{label} is missing columns: {', '.join(missing)}")
+
+
+def filter_pregame_history(
+    board: pd.DataFrame,
+    history: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.Timestamp]:
+    slate_dates = pd.to_datetime(board["slate_date"], errors="coerce").dropna().unique()
+    if len(slate_dates) != 1:
+        raise ValueError("Decision board must contain exactly one valid slate_date")
+
+    slate_date = pd.Timestamp(slate_dates[0]).normalize()
+    game_dates = pd.to_datetime(history["GAME_DATE"], errors="coerce").dt.normalize()
+    filtered = history.loc[game_dates < slate_date].copy()
+    filtered["GAME_DATE"] = game_dates.loc[filtered.index]
+    return filtered, slate_date
+
+
+def deduplicate_player_games(history: pd.DataFrame) -> pd.DataFrame:
+    """Keep one canonical result for each player in each game."""
+
+    frame = history.copy()
+    if "PLAYER_ID" in frame.columns:
+        keys = ["GAME_ID", "PLAYER_ID"]
+    else:
+        frame["_dedupe_player"] = frame["PLAYER_NAME"].map(normalize_name)
+        keys = ["GAME_ID", "_dedupe_player"]
+    return frame.drop_duplicates(subset=keys, keep="last").copy()
+
+
 def score_board(
     board_path: Path,
     history_path: Path,
@@ -178,7 +241,11 @@ def score_board(
     board = pd.read_csv(board_path)
     history = pd.read_csv(history_path)
 
-    history["GAME_DATE"] = pd.to_datetime(history["GAME_DATE"], errors="coerce")
+    require_columns(board, REQUIRED_BOARD_COLUMNS, "Decision board")
+    require_columns(history, REQUIRED_HISTORY_COLUMNS, "History file")
+
+    history, slate_date = filter_pregame_history(board, history)
+    history = deduplicate_player_games(history)
     history = history.sort_values("GAME_DATE")
     history["_player_key"] = history["PLAYER_NAME"].map(normalize_name)
     board["_player_key"] = board["player"].map(normalize_name)
@@ -187,21 +254,35 @@ def score_board(
         board[column] = board[column].astype("object")
 
     scoring_rows: list[dict[str, object]] = []
+    opportunity_rows: list[dict[str, object]] = []
+    suppression_rows: list[dict[str, object]] = []
+    matchup_rows: list[dict[str, object]] = []
 
     for index, row in board.iterrows():
         prop_type = str(row["prop_type"])
         result_column = PROP_TO_RESULT.get(prop_type)
         player_history = history[history["_player_key"] == row["_player_key"]]
+        opportunity = calculate_opportunity_context(player_history, prop_type)
+        suppression = calculate_suppression_context(
+            player_history,
+            prop_type,
+            float(row["line"]),
+        )
+        matchup = calculate_team_matchup_context(
+            history,
+            str(row["opponent"]),
+            prop_type,
+        )
 
         if result_column is None or result_column not in history.columns:
             metrics = calculate_scores(pd.Series(dtype=float), float(row["line"]))
-            red_flag = "Unsupported prop type"
+            red_flag = f"Unsupported prop type; {BASELINE_RED_FLAG}"
         else:
             metrics = calculate_scores(
                 player_history[result_column],
                 float(row["line"]),
             )
-            red_flag = ""
+            red_flag = BASELINE_RED_FLAG
 
         direction, model_score, reason = choose_direction(
             float(metrics["over_score"]),
@@ -218,20 +299,57 @@ def score_board(
         board.at[index, "direction"] = direction
         board.at[index, "grade"] = grade
         board.at[index, "model_score"] = model_score
-        board.at[index, "recommended"] = int(
-            direction != "PASS" and grade in {"B+", "B"}
-        )
-        board.at[index, "entry_type"] = (
-            "FLEX" if direction != "PASS" and grade in {"B+", "B"} else ""
-        )
+        # Baseline statistics never create a betting recommendation. Current
+        # opportunity and matchup confirmation are mandatory under v17.3.
+        board.at[index, "recommended"] = 0
+        board.at[index, "entry_type"] = ""
+        board.at[index, "opportunity_score"] = opportunity["opportunity_score"]
+        board.at[index, "expected_minutes"] = opportunity["expected_minutes"]
+        board.at[index, "suppression_score"] = suppression["suppression_score"]
+        board.at[index, "ceiling_risk_score"] = suppression["ceiling_risk_score"]
+        board.at[index, "matchup_score"] = matchup["matchup_score"]
+        if direction == "UNDER":
+            board.at[index, "under_reason"] = (
+                suppression["historical_under_reasons"]
+                or "NO_HISTORICAL_STRUCTURAL_REASON"
+            )
+        elif direction == "OVER":
+            board.at[index, "over_reason"] = opportunity["opportunity_note"]
         board.at[index, "red_flags"] = red_flag
-        board.at[index, "decision_reason"] = reason
+        board.at[index, "decision_reason"] = (
+            f"BASELINE STATISTICAL ONLY — {reason}; "
+            f"{opportunity['opportunity_note']}; "
+            f"{suppression['suppression_note']}; "
+            f"{matchup['matchup_note']}; "
+            f"history cutoff {slate_date.date()}"
+        )
         scoring_rows.append(metrics)
+        opportunity_rows.append(opportunity)
+        suppression_rows.append(suppression)
+        matchup_rows.append(matchup)
 
     metrics_frame = pd.DataFrame(scoring_rows)
 
     for column in metrics_frame.columns:
         board[column] = metrics_frame[column].values
+
+    opportunity_frame = pd.DataFrame(opportunity_rows)
+    for column in opportunity_frame.columns:
+        if column not in {"opportunity_score", "expected_minutes"}:
+            board[column] = opportunity_frame[column].values
+
+    suppression_frame = pd.DataFrame(suppression_rows)
+    for column in suppression_frame.columns:
+        if column not in {
+            "suppression_score",
+            "ceiling_risk_score",
+        }:
+            board[column] = suppression_frame[column].values
+
+    matchup_frame = pd.DataFrame(matchup_rows)
+    for column in matchup_frame.columns:
+        if column != "matchup_score":
+            board[column] = matchup_frame[column].values
 
     board["statistical_score"] = board["model_score"]
 
