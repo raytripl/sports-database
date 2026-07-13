@@ -12,6 +12,8 @@ MIN_SCORE = 74.0
 MIN_EDGE_GAP = 8.0
 MIN_OPPORTUNITY = 60.0
 MIN_MATCHUP_SAMPLE = 5
+OVER_MATCHUP_FLOOR = 52.0
+UNDER_MATCHUP_CEILING = 48.0
 ALLOWED_GRADES = {"B", "B+"}
 ALLOWED_STATUSES = {"ACTIVE", "PROBABLE"}
 
@@ -79,6 +81,12 @@ def classify(row: pd.Series) -> tuple[str, str]:
         failures.append("OPPONENT_MISSING")
     if float(row.get("team_matchup_sample_size", 0) or 0) < MIN_MATCHUP_SAMPLE:
         failures.append("MATCHUP_SAMPLE_LT_5")
+    direction = str(row.get("direction", "")).upper()
+    matchup_score = float(row.get("matchup_score", 50) or 50)
+    if direction == "OVER" and matchup_score < OVER_MATCHUP_FLOOR:
+        failures.append("MATCHUP_NOT_OVER_FRIENDLY")
+    if direction == "UNDER" and matchup_score > UNDER_MATCHUP_CEILING:
+        failures.append("MATCHUP_NOT_UNDER_FRIENDLY")
     if failures:
         return "PASS", "|".join(failures)
 

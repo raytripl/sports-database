@@ -30,6 +30,7 @@ class HistoricActionableTests(unittest.TestCase):
             "availability_captured_at": "2026-07-13T17:00:00-05:00",
             "slate_date": "2026-07-13",
             "opponent": "MIN", "team_matchup_sample_size": 12,
+            "matchup_score": 55,
         })
 
     def test_live_confirmation_can_create_flex_review_only(self):
@@ -58,6 +59,14 @@ class HistoricActionableTests(unittest.TestCase):
         self.assertEqual(status, "PASS")
         self.assertIn("OPPONENT_MISSING", reason)
         self.assertIn("MATCHUP_SAMPLE_LT_5", reason)
+
+    def test_directionally_conflicting_matchup_is_pass(self):
+        row = self.base_row()
+        row["direction"] = "UNDER"
+        row["matchup_score"] = 63.5
+        status, reason = classify(row)
+        self.assertEqual(status, "PASS")
+        self.assertIn("MATCHUP_NOT_UNDER_FRIENDLY", reason)
 
 
 if __name__ == "__main__":
