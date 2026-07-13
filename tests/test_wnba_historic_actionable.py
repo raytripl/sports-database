@@ -29,6 +29,7 @@ class HistoricActionableTests(unittest.TestCase):
             "lineup_confirmed": "yes", "minutes_restriction": "",
             "availability_captured_at": "2026-07-13T17:00:00-05:00",
             "slate_date": "2026-07-13",
+            "opponent": "MIN", "team_matchup_sample_size": 12,
         })
 
     def test_live_confirmation_can_create_flex_review_only(self):
@@ -48,6 +49,15 @@ class HistoricActionableTests(unittest.TestCase):
         status, reason = classify(row)
         self.assertEqual(status, "PASS")
         self.assertIn("HISTORY_LT_10", reason)
+
+    def test_missing_matchup_is_pass(self):
+        row = self.base_row()
+        row["opponent"] = ""
+        row["team_matchup_sample_size"] = 0
+        status, reason = classify(row)
+        self.assertEqual(status, "PASS")
+        self.assertIn("OPPONENT_MISSING", reason)
+        self.assertIn("MATCHUP_SAMPLE_LT_5", reason)
 
 
 if __name__ == "__main__":

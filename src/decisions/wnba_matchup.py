@@ -25,11 +25,19 @@ PROP_TO_RESULT = {
     "FG Attempted": "FGA",
     "FG Made": "FGM",
     "Def Rebounds": "DREB",
+    "Defensive Rebounds": "DREB",
     "Off Rebounds": "OREB",
+    "Offensive Rebounds": "OREB",
     "Blks+Stls": "STOCKS",
+    "Blocked Shots": "BLK",
+    "Steals": "STL",
     "Turnovers": "TOV",
     "2-PT Attempted": "FG2A",
+    "Two Pointers Attempted": "FG2A",
     "2-PT Made": "FG2M",
+    "Two Pointers Made": "FG2M",
+    "Free Throws Attempted": "FTA",
+    "Free Throws Made": "FTM",
 }
 
 

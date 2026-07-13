@@ -23,9 +23,15 @@ VOLUME_COLUMNS = {
     "FG Attempted": ("FGA",),
     "FG Made": ("FGA",),
     "2-PT Attempted": ("FG2A",),
+    "Two Pointers Attempted": ("FG2A",),
     "2-PT Made": ("FG2A",),
+    "Two Pointers Made": ("FG2A",),
     "Off Rebounds": ("OREB",),
+    "Offensive Rebounds": ("OREB",),
     "Def Rebounds": ("DREB",),
+    "Defensive Rebounds": ("DREB",),
+    "Free Throws Attempted": ("FTA",),
+    "Free Throws Made": ("FTA",),
 }
 
 

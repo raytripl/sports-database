@@ -11,6 +11,7 @@ MIN_SAMPLE = 10
 MIN_SCORE = 74.0
 MIN_EDGE_GAP = 8.0
 MIN_OPPORTUNITY = 60.0
+MIN_MATCHUP_SAMPLE = 5
 ALLOWED_GRADES = {"B", "B+"}
 ALLOWED_STATUSES = {"ACTIVE", "PROBABLE"}
 
@@ -74,6 +75,10 @@ def classify(row: pd.Series) -> tuple[str, str]:
         failures.append("EDGE_GAP_LT_8")
     if float(row.get("opportunity_score", 0) or 0) < MIN_OPPORTUNITY:
         failures.append("OPPORTUNITY_LT_60")
+    if blank(row.get("opponent")):
+        failures.append("OPPONENT_MISSING")
+    if float(row.get("team_matchup_sample_size", 0) or 0) < MIN_MATCHUP_SAMPLE:
+        failures.append("MATCHUP_SAMPLE_LT_5")
     if failures:
         return "PASS", "|".join(failures)
 
