@@ -262,6 +262,32 @@ CREATE TABLE IF NOT EXISTS wnba_availability_snapshots (
 );
 
 
+CREATE TABLE IF NOT EXISTS wnba_on_off_splits (
+    split_id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    generated_at TEXT NOT NULL,
+    as_of_date TEXT NOT NULL,
+    season INTEGER NOT NULL,
+    team TEXT,
+    player TEXT NOT NULL,
+    teammate TEXT NOT NULL,
+    metric TEXT NOT NULL,
+
+    with_games INTEGER NOT NULL,
+    without_games INTEGER NOT NULL,
+    with_average REAL,
+    without_average REAL,
+    without_minus_with REAL,
+    with_per_minute REAL,
+    without_per_minute REAL,
+    sample_confidence REAL,
+    sample_flag TEXT,
+    source TEXT,
+
+    UNIQUE (as_of_date, player, teammate, metric, team)
+);
+
+
 CREATE INDEX IF NOT EXISTS idx_decisions_slate
 ON model_decisions (slate_date, sport);
 
@@ -279,6 +305,9 @@ ON historical_prop_lines (slate_date, player, prop_type);
 
 CREATE INDEX IF NOT EXISTS idx_wnba_availability_snapshot
 ON wnba_availability_snapshots (snapshot_id, player, captured_at);
+
+CREATE INDEX IF NOT EXISTS idx_wnba_on_off_player
+ON wnba_on_off_splits (as_of_date, player, teammate, metric);
 """
 
 
