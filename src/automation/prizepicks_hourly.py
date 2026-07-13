@@ -10,15 +10,16 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
-from src.imports import prizepicks
-from src.imports import process_pool
-from src.pipelines.wnba_daily import run_pipeline
+from src.imports import prizepicks, process_pool
+from src.pipelines.mlb_daily import run_pipeline as run_mlb_pipeline
+from src.pipelines.wnba_daily import run_pipeline as run_wnba_pipeline
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RUNTIME_ROOT = PROJECT_ROOT / "data" / "runtime" / "prizepicks"
 MODEL_RUNS = PROJECT_ROOT / "data" / "model_runs"
 WNBA_HISTORY = PROJECT_ROOT / "data" / "wnba" / "WNBA_RESULTS_HISTORY.csv"
+MLB_HISTORY = PROJECT_ROOT / "data" / "mlb" / "MLB_RESULTS_HISTORY.csv"
 LOCK_PATH = RUNTIME_ROOT / "hourly_capture.lock"
 CENTRAL = ZoneInfo("America/Chicago")
 
@@ -38,14 +39,22 @@ def single_run_lock(path: Path):
         path.unlink(missing_ok=True)
 
 
-def eligible_wnba_dates(frame: pd.DataFrame, now: datetime) -> list[str]:
+def eligible_sport_dates(frame: pd.DataFrame, sport: str, now: datetime) -> list[str]:
     if "league" not in frame.columns or "slate_date" not in frame.columns:
         return []
-    wnba = frame[frame["league"].astype(str).str.upper() == "WNBA"]
+    rows = frame[frame["league"].astype(str).str.upper() == sport.upper()]
     today = now.astimezone(CENTRAL).date()
     tomorrow = today + timedelta(days=1)
-    available = set(wnba["slate_date"].dropna().astype(str))
-    return [str(date) for date in (today, tomorrow) if str(date) in available]
+    available = set(rows["slate_date"].dropna().astype(str))
+    return [str(day) for day in (today, tomorrow) if str(day) in available]
+
+
+def eligible_wnba_dates(frame: pd.DataFrame, now: datetime) -> list[str]:
+    return eligible_sport_dates(frame, "WNBA", now)
+
+
+def eligible_mlb_dates(frame: pd.DataFrame, now: datetime) -> list[str]:
+    return eligible_sport_dates(frame, "MLB", now)
 
 
 def configure_runtime_directories() -> None:
@@ -72,17 +81,16 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
             _standard,
         ) = process_pool.process_pool(downloaded_csv)
 
-        dates = eligible_wnba_dates(normalized, current)
-        routed: list[dict[str, object]] = []
-        for slate_date in dates:
-            routed.append(
-                run_pipeline(
-                    pool_path=normalized_path,
-                    slate_date=slate_date,
-                    history_path=WNBA_HISTORY,
-                    output_dir=MODEL_RUNS,
-                )
-            )
+        wnba_dates = eligible_wnba_dates(normalized, current)
+        mlb_dates = eligible_mlb_dates(normalized, current)
+        wnba_runs = [
+            run_wnba_pipeline(normalized_path, slate, WNBA_HISTORY, MODEL_RUNS)
+            for slate in wnba_dates
+        ]
+        mlb_runs = [
+            run_mlb_pipeline(normalized_path, slate, MLB_HISTORY, MODEL_RUNS)
+            for slate in mlb_dates
+        ]
 
         manifest = {
             "captured_at": current.astimezone(CENTRAL).isoformat(),
@@ -92,8 +100,10 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
             "all_sport_rows": all_sport_rows,
             "normalized_mlb_wnba_rows": len(normalized),
             "leagues": normalized["league"].value_counts().to_dict(),
-            "wnba_dates_routed": dates,
-            "wnba_runs": routed,
+            "wnba_dates_routed": wnba_dates,
+            "wnba_runs": wnba_runs,
+            "mlb_dates_routed": mlb_dates,
+            "mlb_runs": mlb_runs,
             "recommendations_enabled": False,
         }
         manifest_path = RUNTIME_ROOT / "latest_capture_manifest.json"
@@ -101,14 +111,10 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
         return manifest
 
 
-def parse_args() -> argparse.Namespace:
+def main() -> None:
     parser = argparse.ArgumentParser(description="Hourly all-sport PrizePicks capture")
     parser.add_argument("--dry-run", action="store_true")
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
+    args = parser.parse_args()
     if args.dry_run:
         print("Dry-run validates imports only; no network request was made.")
         return
@@ -119,6 +125,7 @@ def main() -> None:
     print(f"All-sport rows: {result['all_sport_rows']:,}")
     print(f"Normalized MLB/WNBA rows: {result['normalized_mlb_wnba_rows']:,}")
     print(f"WNBA dates routed: {result['wnba_dates_routed']}")
+    print(f"MLB dates routed: {result['mlb_dates_routed']}")
     print("Recommendations remain disabled.")
 
 
