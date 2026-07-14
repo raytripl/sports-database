@@ -19,6 +19,11 @@ class MatchupFoundationTests(unittest.TestCase):
             "captured_at_utc": "2026-07-13T10:00:00Z",
             "slate_date": "2026-07-13",
             "source": "PrizePicks",
+            "line_tier": "STANDARD",
+            "is_standard_line": True,
+            "projection_type": "Single Stat",
+            "odds_type": "standard",
+            "capture_id": "capture-1",
         }
 
     def test_duplicate_capture_is_removed(self) -> None:

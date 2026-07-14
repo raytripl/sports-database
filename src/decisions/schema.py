@@ -130,6 +130,12 @@ CREATE TABLE IF NOT EXISTS historical_prop_lines (
     over_odds TEXT,
     under_odds TEXT,
     source TEXT,
+    line_tier TEXT,
+    is_standard_line INTEGER NOT NULL DEFAULT 0,
+    projection_type TEXT,
+    odds_type TEXT,
+    payout_modifier REAL,
+    capture_id TEXT,
 
     is_opening_line INTEGER DEFAULT 0,
     is_closing_line INTEGER DEFAULT 0
@@ -315,6 +321,23 @@ def initialize_schema() -> None:
     with connect() as connection:
         connection.execute("PRAGMA foreign_keys = ON;")
         connection.executescript(SCHEMA)
+        existing = {
+            row[1]
+            for row in connection.execute("PRAGMA table_info(historical_prop_lines)")
+        }
+        additions = {
+            "line_tier": "TEXT",
+            "is_standard_line": "INTEGER NOT NULL DEFAULT 0",
+            "projection_type": "TEXT",
+            "odds_type": "TEXT",
+            "payout_modifier": "REAL",
+            "capture_id": "TEXT",
+        }
+        for column, definition in additions.items():
+            if column not in existing:
+                connection.execute(
+                    f"ALTER TABLE historical_prop_lines ADD COLUMN {column} {definition}"
+                )
 
     print("[OK] Model Decision Log schema initialized.")
 

@@ -59,12 +59,49 @@ def ensure_foundation_schema() -> None:
             connection.execute(
                 "ALTER TABLE model_decisions ADD COLUMN player_position TEXT"
             )
+        connection.execute("DROP INDEX IF EXISTS idx_unique_historical_prop_capture")
         connection.execute(
             """
             CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_historical_prop_capture
             ON historical_prop_lines (
-                captured_at, slate_date, sport, player, prop_type, line, source
+                captured_at, slate_date, sport, player, prop_type, line,
+                COALESCE(line_tier, ''), COALESCE(capture_id, ''), source
             )
+            """
+        )
+        # Conservative legacy backfill: only copy metadata when the decision log
+        # has one unambiguous tier for the exact captured market.
+        connection.execute(
+            """
+            UPDATE historical_prop_lines AS h
+            SET line_tier = (
+                    SELECT MIN(d.line_tier) FROM model_decisions d
+                    WHERE d.slate_date = h.slate_date AND d.sport = h.sport
+                      AND d.player = h.player AND d.prop_type = h.prop_type
+                      AND d.line = h.line
+                ),
+                is_standard_line = COALESCE((
+                    SELECT MIN(d.is_standard_line) FROM model_decisions d
+                    WHERE d.slate_date = h.slate_date AND d.sport = h.sport
+                      AND d.player = h.player AND d.prop_type = h.prop_type
+                      AND d.line = h.line
+                    HAVING COUNT(DISTINCT COALESCE(d.line_tier, '')) = 1
+                ), 0),
+                projection_type = (
+                    SELECT MIN(d.projection_type) FROM model_decisions d
+                    WHERE d.slate_date = h.slate_date AND d.sport = h.sport
+                      AND d.player = h.player AND d.prop_type = h.prop_type
+                      AND d.line = h.line
+                    HAVING COUNT(DISTINCT COALESCE(d.line_tier, '')) = 1
+                )
+            WHERE h.line_tier IS NULL
+              AND EXISTS (
+                  SELECT COUNT(*) FROM model_decisions d
+                  WHERE d.slate_date = h.slate_date AND d.sport = h.sport
+                    AND d.player = h.player AND d.prop_type = h.prop_type
+                    AND d.line = h.line
+                  HAVING COUNT(DISTINCT COALESCE(d.line_tier, '')) = 1
+              )
             """
         )
 
@@ -86,8 +123,10 @@ def capture(snapshot_id: str, pool_path: Path, sport: str) -> dict[str, int]:
     insert_line = """
         INSERT OR IGNORE INTO historical_prop_lines (
             captured_at, slate_date, sport, player, team, opponent,
-            prop_type, line, source, is_opening_line, is_closing_line
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)
+            prop_type, line, over_odds, under_odds, source,
+            line_tier, is_standard_line, projection_type, odds_type,
+            payout_modifier, capture_id, is_opening_line, is_closing_line
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)
     """
 
     with connect() as connection:
@@ -125,7 +164,18 @@ def capture(snapshot_id: str, pool_path: Path, sport: str) -> dict[str, int]:
                     clean_text(row["game_description"]),
                     prop_type,
                     line,
+                    clean_text(row.get("over_odds")),
+                    clean_text(row.get("under_odds")),
                     clean_text(row["source"]) or str(pool_path),
+                    clean_text(row.get("line_tier")),
+                    int(bool(row.get("is_standard_line", False))),
+                    clean_text(row.get("projection_type")),
+                    clean_text(row.get("odds_type")),
+                    pd.to_numeric(row.get("payout_modifier"), errors="coerce")
+                    if pd.notna(row.get("payout_modifier")) else None,
+                    clean_text(row.get("capture_id"))
+                    or clean_text(row.get("source_export_file"))
+                    or snapshot_id,
                 ),
             )
             lines_inserted += cursor.rowcount

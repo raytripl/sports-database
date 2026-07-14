@@ -4,9 +4,13 @@ import unittest
 
 from src.decisions.enrich_wnba_availability import (
     availability_flags,
+    load_availability,
     optional_bool,
     replace_live_flag,
 )
+import tempfile
+from pathlib import Path
+import pandas as pd
 
 
 class WnbaAvailabilityTests(unittest.TestCase):
@@ -34,6 +38,17 @@ class WnbaAvailabilityTests(unittest.TestCase):
             result,
             "Baseline only; LIVE_AVAILABILITY[HARD_VETO_QUESTIONABLE]",
         )
+
+    def test_availability_file_is_validated_for_ingestion(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "availability.csv"
+            pd.DataFrame([{
+                "player": "Temi Fagbenle", "team": "TOR", "injury_status": "OUT",
+                "captured_at": "2026-07-14T14:45:00-05:00", "source": "WNBA official",
+            }]).to_csv(path, index=False)
+            result = load_availability(path)
+            self.assertEqual(result.iloc[0]["injury_status"], "OUT")
+            self.assertIn("lineup_confirmed", result.columns)
 
 
 if __name__ == "__main__":

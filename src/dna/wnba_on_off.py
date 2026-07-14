@@ -171,6 +171,87 @@ def calculate_on_off(
     return pd.DataFrame(rows)
 
 
+def calculate_joint_absence(
+    history: pd.DataFrame,
+    player: str,
+    absent_teammates: list[str],
+    as_of_date: str,
+    metrics: list[str] | None = None,
+    minimum_games: int = 3,
+) -> pd.DataFrame:
+    """Measure the target only in games where every named teammate was absent.
+
+    This deliberately evaluates the intersection of absences. It never sums
+    individual teammate effects.
+    """
+    require_columns(history)
+    if not absent_teammates:
+        raise ValueError("At least one absent teammate is required")
+    teammate_keys = {normalize_name(name) for name in absent_teammates}
+    if len(teammate_keys) != len(absent_teammates):
+        raise ValueError("Absent teammates must be unique")
+    player_key = normalize_name(player)
+    if player_key in teammate_keys:
+        raise ValueError("Player cannot also be an absent teammate")
+
+    frame = deduplicate_player_games(pregame_history(history, as_of_date))
+    frame["_player_key"] = frame["PLAYER_NAME"].map(normalize_name)
+    target = frame[frame["_player_key"].eq(player_key)].copy()
+    if target.empty:
+        raise ValueError(f"No pregame history found for player: {player}")
+
+    present_by_teammate: dict[str, set[tuple[str, str]]] = {}
+    shared_teams = set(target["TEAM_ABBREVIATION"].dropna().astype(str))
+    for key in teammate_keys:
+        rows = frame[
+            frame["_player_key"].eq(key)
+            & (pd.to_numeric(frame["MIN"], errors="coerce") > 0)
+        ]
+        shared_teams &= set(rows["TEAM_ABBREVIATION"].dropna().astype(str))
+        present_by_teammate[key] = set(zip(rows["GAME_ID"].astype(str), rows["TEAM_ABBREVIATION"].astype(str)))
+    if not shared_teams:
+        raise ValueError("No shared team history found for the requested joint absence")
+    target = target[target["TEAM_ABBREVIATION"].astype(str).isin(shared_teams)].copy()
+
+    target["joint_absence"] = [
+        all((str(game_id), str(team)) not in games for games in present_by_teammate.values())
+        for game_id, team in zip(target["GAME_ID"], target["TEAM_ABBREVIATION"])
+    ]
+    absent = target[target["joint_absence"]]
+    baseline = target[~target["joint_absence"]]
+    absent_games = len(absent)
+    baseline_games = len(baseline)
+    sample_flag = "OK" if absent_games >= minimum_games and baseline_games >= minimum_games else "LOW_SAMPLE"
+    teammate_label = " + ".join(sorted(absent_teammates))
+    selected = [metric for metric in (metrics or DEFAULT_METRICS) if metric in frame.columns]
+    if not selected:
+        raise ValueError("None of the requested metrics exist in history")
+
+    result = []
+    for metric in selected:
+        absent_average = safe_average(absent[metric])
+        baseline_average = safe_average(baseline[metric])
+        result.append({
+            "as_of_date": str(pd.Timestamp(as_of_date).date()),
+            "team": target["TEAM_ABBREVIATION"].astype(str).mode().iloc[0],
+            "player": player,
+            "teammates_absent": teammate_label,
+            "metric": metric,
+            "joint_absence_games": absent_games,
+            "baseline_games": baseline_games,
+            "joint_absence_average": absent_average,
+            "baseline_average": baseline_average,
+            "joint_absence_delta": (
+                absent_average - baseline_average
+                if absent_average is not None and baseline_average is not None else None
+            ),
+            "joint_absence_per_minute": rate_per_minute(absent[metric], absent["MIN"]),
+            "sample_flag": sample_flag,
+            "recommendation_eligible": False,
+        })
+    return pd.DataFrame(result)
+
+
 def save_splits(frame: pd.DataFrame, source: str) -> int:
     initialize_schema()
     generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
