@@ -12,6 +12,7 @@ from src.decisions.schema import initialize_schema
 
 VALID_STATUSES = {
     "ACTIVE",
+    "AVAILABLE",
     "PROBABLE",
     "QUESTIONABLE",
     "DOUBTFUL",
@@ -113,6 +114,13 @@ def load_availability(path: Path) -> pd.DataFrame:
     return frame
 
 
+def filter_availability_to_slate(frame: pd.DataFrame, slate_date: str) -> pd.DataFrame:
+    if "game_date" not in frame.columns:
+        return frame.copy()
+    dates = pd.to_datetime(frame["game_date"], errors="coerce").dt.strftime("%Y-%m-%d")
+    return frame.loc[dates.eq(slate_date)].copy()
+
+
 def enrich_snapshot(snapshot_id: str, availability_path: Path) -> dict[str, int]:
     initialize_schema()
     availability = load_availability(availability_path)
@@ -136,13 +144,19 @@ def enrich_snapshot(snapshot_id: str, availability_path: Path) -> dict[str, int]
     if len(slate_dates) != 1:
         raise ValueError("Snapshot must contain one slate date")
     slate_date = slate_dates[0]
+    availability = filter_availability_to_slate(availability, slate_date)
 
     decisions["_player_key"] = decisions["player"].map(normalize_name)
     key_to_decisions = {
         key: group for key, group in decisions.groupby("_player_key", sort=False)
     }
 
-    counts = {"players_matched": 0, "props_updated": 0, "players_unmatched": 0}
+    counts = {
+        "official_rows": len(availability),
+        "players_matched": 0,
+        "props_updated": 0,
+        "players_unmatched": 0,
+    }
 
     with connect() as connection:
         for _, row in availability.iterrows():

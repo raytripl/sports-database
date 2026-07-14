@@ -1,5 +1,6 @@
 pandas
 requests
+pypdf>=6.0,<7
 python-dotenv
 pybaseball
 nba_api

@@ -13,6 +13,7 @@ import pandas as pd
 from src.imports import prizepicks, process_pool
 from src.imports.consolidate_exports import consolidate_directory
 from src.imports.fetch_mlb_live_context import fetch_to_csv
+from src.imports.wnba_official_injuries import capture_latest as capture_wnba_availability
 from src.pipelines.mlb_daily import run_pipeline as run_mlb_pipeline
 from src.pipelines.wnba_daily import run_pipeline as run_wnba_pipeline
 
@@ -150,7 +151,22 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
         (_, normalized_path, _, _, normalized, _) = process_pool.process_pool(downloaded_csv)
         wnba_dates = eligible_wnba_dates(normalized, current)
         mlb_dates = eligible_mlb_dates(normalized, current)
-        wnba_runs = [run_wnba_pipeline(normalized_path, day, WNBA_HISTORY, MODEL_RUNS) for day in wnba_dates]
+        wnba_availability = None
+        wnba_availability_error = None
+        availability_path = None
+        if wnba_dates:
+            try:
+                wnba_availability = capture_wnba_availability(now=current)
+                availability_path = Path(str(wnba_availability["csv_path"]))
+            except Exception as error:
+                wnba_availability_error = f"{type(error).__name__}: {error}"
+        wnba_runs = [
+            run_wnba_pipeline(
+                normalized_path, day, WNBA_HISTORY, MODEL_RUNS,
+                availability_path=availability_path,
+            )
+            for day in wnba_dates
+        ]
         mlb_runs = [run_mlb_with_context(normalized_path, day) for day in mlb_dates]
         manifest = {
             "captured_at": current.astimezone(CENTRAL).isoformat(),
@@ -169,6 +185,8 @@ def run_hourly_capture(now: datetime | None = None) -> dict[str, object]:
                 ].dropna().astype(str).unique().tolist()
             ),
             "wnba_dates_routed": wnba_dates, "wnba_runs": wnba_runs,
+            "wnba_official_availability": wnba_availability,
+            "wnba_official_availability_error": wnba_availability_error,
             "mlb_dates_routed": mlb_dates, "mlb_runs": mlb_runs,
             "recommendations_enabled": False,
         }

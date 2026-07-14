@@ -39,6 +39,7 @@ legacy/
 /data/exports/*.csv
 /data/mlb/*.csv
 /data/wnba/*.csv
+/data/wnba/injury_reports/
 /backups/*
 !/backups/.gitkeep
 # Generated model decision boards

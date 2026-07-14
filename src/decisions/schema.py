@@ -293,6 +293,29 @@ CREATE TABLE IF NOT EXISTS wnba_on_off_splits (
     UNIQUE (as_of_date, player, teammate, metric, team)
 );
 
+CREATE TABLE IF NOT EXISTS wnba_official_injury_reports (
+    report_id TEXT PRIMARY KEY,
+    report_timestamp TEXT NOT NULL,
+    fetched_at TEXT NOT NULL,
+    source_url TEXT NOT NULL,
+    sha256 TEXT NOT NULL UNIQUE,
+    archive_path TEXT NOT NULL,
+    row_count INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS wnba_official_availability (
+    report_id TEXT NOT NULL,
+    game_date TEXT NOT NULL,
+    game_time TEXT,
+    matchup TEXT NOT NULL,
+    team TEXT NOT NULL,
+    player TEXT NOT NULL,
+    injury_status TEXT NOT NULL,
+    reason TEXT,
+    FOREIGN KEY (report_id) REFERENCES wnba_official_injury_reports(report_id),
+    UNIQUE (report_id, game_date, matchup, team, player)
+);
+
 
 CREATE INDEX IF NOT EXISTS idx_decisions_slate
 ON model_decisions (slate_date, sport);
@@ -314,6 +337,9 @@ ON wnba_availability_snapshots (snapshot_id, player, captured_at);
 
 CREATE INDEX IF NOT EXISTS idx_wnba_on_off_player
 ON wnba_on_off_splits (as_of_date, player, teammate, metric);
+
+CREATE INDEX IF NOT EXISTS idx_wnba_official_availability_player
+ON wnba_official_availability (game_date, player, report_id);
 """
 
 

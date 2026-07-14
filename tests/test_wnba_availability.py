@@ -4,6 +4,7 @@ import unittest
 
 from src.decisions.enrich_wnba_availability import (
     availability_flags,
+    filter_availability_to_slate,
     load_availability,
     optional_bool,
     replace_live_flag,
@@ -22,6 +23,9 @@ class WnbaAvailabilityTests(unittest.TestCase):
     def test_questionable_is_hard_veto(self) -> None:
         flags = availability_flags("QUESTIONABLE", 1, None)
         self.assertIn("HARD_VETO_QUESTIONABLE", flags)
+
+    def test_official_available_status_is_accepted(self) -> None:
+        self.assertEqual(availability_flags("AVAILABLE", 1, None), [])
 
     def test_restriction_is_hard_veto(self) -> None:
         flags = availability_flags("ACTIVE", 1, "20-25 minutes")
@@ -49,6 +53,14 @@ class WnbaAvailabilityTests(unittest.TestCase):
             result = load_availability(path)
             self.assertEqual(result.iloc[0]["injury_status"], "OUT")
             self.assertIn("lineup_confirmed", result.columns)
+
+    def test_official_report_is_filtered_to_snapshot_slate(self) -> None:
+        frame = pd.DataFrame({
+            "game_date": ["2026-07-14", "2026-07-15"],
+            "player": ["Today", "Tomorrow"],
+        })
+        result = filter_availability_to_slate(frame, "2026-07-14")
+        self.assertEqual(result["player"].tolist(), ["Today"])
 
 
 if __name__ == "__main__":
