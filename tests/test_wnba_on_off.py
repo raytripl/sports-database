@@ -4,7 +4,7 @@ import unittest
 
 import pandas as pd
 
-from src.dna.wnba_on_off import calculate_on_off
+from src.dna.wnba_on_off import calculate_joint_absence, calculate_on_off
 
 
 class WnbaOnOffTests(unittest.TestCase):
@@ -51,6 +51,23 @@ class WnbaOnOffTests(unittest.TestCase):
             calculate_on_off(
                 self.history(), "Target", "Target", "2026-07-13", ["PTS"]
             )
+
+    def test_joint_absence_uses_intersection_not_summed_effects(self) -> None:
+        history = self.history()
+        extra = pd.DataFrame([
+            {"GAME_ID": 1, "GAME_DATE": "2026-07-01", "PLAYER_ID": 30,
+             "PLAYER_NAME": "Second Teammate", "TEAM_ABBREVIATION": "AAA", "MIN": 20,
+             "PTS": 4, "FGA": 3},
+        ])
+        result = calculate_joint_absence(
+            pd.concat([history, extra], ignore_index=True), "Target",
+            ["Teammate", "Second Teammate"], "2026-07-13", ["PTS"],
+            minimum_games=1,
+        )
+        row = result.iloc[0]
+        self.assertEqual(row["joint_absence_games"], 1)
+        self.assertEqual(row["joint_absence_average"], 20)
+        self.assertFalse(row["recommendation_eligible"])
 
 
 if __name__ == "__main__":
