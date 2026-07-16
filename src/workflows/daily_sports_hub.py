@@ -18,6 +18,12 @@ from src.imports.capture_matchup_foundation import capture_all_prop_lines
 from src.imports.fetch_mlb_live_context import fetch_to_csv
 from src.imports.wnba_official_injuries import capture_latest as capture_wnba_injuries
 from src.imports.wnba_lineups import capture_rotowire_lineups, merge_availability
+from src.context.build_wnba_opportunity import build_projections as build_wnba_opportunity_projections
+from src.context.opportunity_store import (
+    create_run as create_opportunity_run,
+    insert_frame as insert_opportunity_frame,
+    update_run_row_count as update_opportunity_run_row_count,
+)
 from src.pipelines.mlb_daily import run_pipeline as run_mlb
 from src.pipelines.wnba_daily import run_pipeline as run_wnba
 from src.decisions.build_research_rankings import build_rankings
@@ -51,11 +57,44 @@ def validate_environment() -> dict[str, object]:
 
 
 def update_data(sport: str) -> dict[str, object]:
-    selected="all" if sport == "all" else sport
-    command=[str(ROOT/".venv"/"Scripts"/"python.exe"), str(ROOT/"update_all.py"), "--sport", selected]
-    completed=subprocess.run(command,cwd=ROOT,text=True,capture_output=True)
-    return {"status":"COMPLETE" if completed.returncode == 0 else "FAILED", "exit_code":completed.returncode,
-            "stdout":completed.stdout[-4000:],"stderr":completed.stderr[-4000:]}
+    selected = "all" if sport == "all" else sport
+    command = [
+        str(ROOT / ".venv" / "Scripts" / "python.exe"),
+        str(ROOT / "update_all.py"),
+        "--sport",
+        selected,
+    ]
+
+    print(
+        f"[SPORTS HUB] Starting data update for: {selected}",
+        flush=True,
+    )
+
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            text=True,
+            check=False,
+            timeout=5400,
+        )
+    except subprocess.TimeoutExpired:
+        return {
+            "status": "FAILED",
+            "exit_code": None,
+            "reason": "UPDATE_TIMEOUT_AFTER_90_MINUTES",
+            "sport": selected,
+        }
+
+    return {
+        "status": (
+            "COMPLETE"
+            if completed.returncode == 0
+            else "FAILED"
+        ),
+        "exit_code": completed.returncode,
+        "sport": selected,
+    }
 
 
 def import_pool(day: str, live: Path) -> dict[str, object]:
@@ -158,7 +197,14 @@ def import_pool(day: str, live: Path) -> dict[str, object]:
 
 
 def capture_context(day: str, live: Path, sport: str) -> dict[str, object]:
-    result={"status":"COMPLETE","mlb_context_rows":0,"errors":[]}
+    result={
+        "status": "COMPLETE",
+        "mlb_context_rows": 0,
+        "wnba_availability_rows": 0,
+        "wnba_opportunity_rows": 0,
+        "wnba_opportunity_status": "NOT_RUN",
+        "errors": [],
+    }
     if sport in {"all","mlb"}:
         context=live/"mlb_context.csv"
         try: result["mlb_context_rows"]=fetch_to_csv(day,context)
@@ -174,10 +220,150 @@ def capture_context(day: str, live: Path, sport: str) -> dict[str, object]:
             injury_path=Path(str(injuries["csv_path"])); injury_rows=pd.read_csv(injury_path)
             lineups=capture_rotowire_lineups(day)
             lineup_path=Path(str(lineups["csv_path"])); lineup_rows=pd.read_csv(lineup_path)
-            merge_availability(injury_path,lineup_path).to_csv(live/"wnba_availability.csv",index=False)
-            _write_json(live/"lineups.json",lineup_rows.to_dict("records"))
-            _write_json(live/"injuries.json",injury_rows.to_dict("records"))
-            result["wnba_availability_rows"]=len(pd.read_csv(live/"wnba_availability.csv"))
+            availability_path = live / "wnba_availability.csv"
+
+            merge_availability(
+                injury_path,
+                lineup_path,
+            ).to_csv(
+                availability_path,
+                index=False,
+            )
+
+            _write_json(
+                live / "lineups.json",
+                lineup_rows.to_dict("records"),
+            )
+
+            _write_json(
+                live / "injuries.json",
+                injury_rows.to_dict("records"),
+            )
+
+            result["wnba_availability_rows"] = len(
+                pd.read_csv(
+                    availability_path,
+                    low_memory=False,
+                )
+            )
+
+            try:
+                opportunity_output = (
+                    live
+                    / "wnba_opportunity_projection.csv"
+                )
+
+                opportunity_database = (
+                    ROOT
+                    / "data"
+                    / "sports_hub.db"
+                )
+
+                opportunity_history = (
+                    ROOT
+                    / "data"
+                    / "wnba"
+                    / "WNBA_RESULTS_HISTORY.csv"
+                )
+
+                opportunity_frame = (
+                    build_wnba_opportunity_projections(
+                        slate_date=day,
+                        history_path=opportunity_history,
+                        availability_path=availability_path,
+                    )
+                )
+
+                opportunity_frame.to_csv(
+                    opportunity_output,
+                    index=False,
+                )
+
+                opportunity_run_id = (
+                    f"wnba-opportunity-{day}-"
+                    f"{datetime.now(CENTRAL).strftime('%H%M%S')}"
+                )
+
+                create_opportunity_run(
+                    run_id=opportunity_run_id,
+                    slate_date=day,
+                    sport="WNBA",
+                    source_summary={
+                        "history": str(
+                            opportunity_history
+                        ),
+                        "availability": str(
+                            availability_path
+                        ),
+                        "output": str(
+                            opportunity_output
+                        ),
+                        "workflow": (
+                            "daily_sports_hub_context"
+                        ),
+                        "version": (
+                            "WNBA_OPPORTUNITY_V2"
+                        ),
+                    },
+                    database=opportunity_database,
+                )
+
+                database_frame = (
+                    opportunity_frame.copy()
+                )
+
+                database_frame.insert(
+                    0,
+                    "run_id",
+                    opportunity_run_id,
+                )
+
+                inserted_rows = (
+                    insert_opportunity_frame(
+                        "basketball_opportunity",
+                        database_frame,
+                        opportunity_database,
+                    )
+                )
+
+                update_opportunity_run_row_count(
+                    opportunity_run_id,
+                    inserted_rows,
+                    opportunity_database,
+                )
+
+                result[
+                    "wnba_opportunity_rows"
+                ] = int(
+                    len(opportunity_frame)
+                )
+
+                result[
+                    "wnba_opportunity_stored_rows"
+                ] = int(inserted_rows)
+
+                result[
+                    "wnba_opportunity_status"
+                ] = "COMPLETE"
+
+                result[
+                    "wnba_opportunity_path"
+                ] = str(opportunity_output)
+
+                result[
+                    "wnba_opportunity_run_id"
+                ] = opportunity_run_id
+
+            except Exception as opportunity_error:
+                result[
+                    "wnba_opportunity_status"
+                ] = "FAILED_RESEARCH_ONLY"
+
+                result["errors"].append(
+                    "WNBA_OPPORTUNITY: "
+                    f"{type(opportunity_error).__name__}: "
+                    f"{opportunity_error}"
+                )
         except Exception as error:
             result["errors"].append(f"WNBA: {type(error).__name__}: {error}")
     if result["errors"]: result["status"]="PARTIAL"
