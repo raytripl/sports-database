@@ -6,6 +6,17 @@ from pathlib import Path
 import pandas as pd
 
 
+RESEARCH_DEGRADER_RULE_VERSION = "WNBA_RESEARCH_DEGRADER_V1"
+
+HARD_DEGRADER_PROP_DIRECTIONS = {
+    ("REBS+ASTS", "OVER"),
+}
+
+WATCHLIST_ONLY_PROP_DIRECTIONS = {
+    ("POINTS", "UNDER"),
+}
+
+
 RESEARCH_MINIMUM = 75.0
 WATCHLIST_MINIMUM = 60.0
 MINIMUM_DIRECTION_GAP = 10.0
@@ -89,6 +100,51 @@ def build_selection_paths(
         "model_direction",
     ).str.strip().str.upper()
 
+    prop_type = (
+        text(board, "prop_type")
+        .str.strip()
+        .str.upper()
+    )
+
+    prop_direction_pairs = pd.Series(
+        list(zip(prop_type, model_direction)),
+        index=board.index,
+    )
+
+    hard_degrader = prop_direction_pairs.isin(
+        HARD_DEGRADER_PROP_DIRECTIONS
+    )
+
+    watchlist_only_degrader = prop_direction_pairs.isin(
+        WATCHLIST_ONLY_PROP_DIRECTIONS
+    )
+
+    board["research_degrader_status"] = "NONE"
+    board["research_degrader_reason"] = ""
+    board["research_degrader_rule_version"] = (
+        RESEARCH_DEGRADER_RULE_VERSION
+    )
+
+    board.loc[
+        hard_degrader,
+        "research_degrader_status",
+    ] = "HARD_BLOCK"
+
+    board.loc[
+        hard_degrader,
+        "research_degrader_reason",
+    ] = "HISTORICAL_DEGRADER_REBS_PLUS_ASTS_OVER"
+
+    board.loc[
+        watchlist_only_degrader,
+        "research_degrader_status",
+    ] = "WATCHLIST_ONLY"
+
+    board.loc[
+        watchlist_only_degrader,
+        "research_degrader_reason",
+    ] = "HISTORICAL_DEGRADER_POINTS_UNDER"
+
     best_player_prop = numeric(
         board,
         "best_player_prop",
@@ -155,6 +211,8 @@ def build_selection_paths(
         & confidence.isin(["HIGH", "MEDIUM"])
         & model_direction.isin(["OVER", "UNDER"])
         & ~unavailable
+        & ~hard_degrader
+        & ~watchlist_only_degrader
     )
 
     watchlist = (
@@ -165,6 +223,7 @@ def build_selection_paths(
         & comparison_score.ge(WATCHLIST_MINIMUM)
         & model_direction.isin(["OVER", "UNDER"])
         & ~unavailable
+        & ~hard_degrader
     )
 
     board.loc[production, "selection_path"] = "PRODUCTION"
@@ -183,6 +242,25 @@ def build_selection_paths(
     board.loc[watchlist, "selection_label"] = "WATCHLIST"
     board.loc[watchlist, "watchlist_eligible_path"] = 1
 
+    board.loc[
+        hard_degrader,
+        "selection_path",
+    ] = "NO_BET"
+
+    board.loc[
+        hard_degrader,
+        "selection_label",
+    ] = "LOW_CONFIDENCE"
+
+    board.loc[
+        hard_degrader,
+        [
+            "production_eligible_path",
+            "research_eligible_path",
+            "watchlist_eligible_path",
+        ],
+    ] = 0
+
     board["failed_gates"] = board.apply(
         build_failed_gates,
         axis=1,
@@ -196,6 +274,28 @@ def build_selection_paths(
     ] = board.loc[
         board["selection_path"].eq("NO_BET"),
         "failed_gates",
+    ]
+
+    board.loc[
+        hard_degrader,
+        "selection_reason",
+    ] = board.loc[
+        hard_degrader,
+        "research_degrader_reason",
+    ]
+
+    board.loc[
+        watchlist_only_degrader
+        & board["selection_path"].eq(
+            "RESEARCH_WATCHLIST"
+        ),
+        "selection_reason",
+    ] = board.loc[
+        watchlist_only_degrader
+        & board["selection_path"].eq(
+            "RESEARCH_WATCHLIST"
+        ),
+        "research_degrader_reason",
     ]
 
     board["selection_path_mode"] = "RESEARCH_ONLY"
@@ -217,6 +317,9 @@ def build_selection_paths(
         "decision_confidence",
         "failed_gates",
         "selection_reason",
+        "research_degrader_status",
+        "research_degrader_reason",
+        "research_degrader_rule_version",
         "production_eligible_path",
         "research_eligible_path",
         "watchlist_eligible_path",

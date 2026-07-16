@@ -200,3 +200,287 @@ def test_valid_completed_date_is_accepted() -> None:
     assert parse_slate_date(
         completed.isoformat()
     ) == completed
+
+
+def test_weak_direction_becomes_no_direction(
+    tmp_path: Path,
+) -> None:
+    scored = tmp_path / "weak_scored_board.csv"
+    live = tmp_path / "weak_live"
+
+    weak = sample_scored_board().iloc[[0]].copy()
+
+    weak["over_score"] = 53.0
+    weak["under_score"] = 49.0
+    weak["model_score"] = 53.0
+    weak["final_selection"] = ""
+    weak["pick_level"] = ""
+
+    weak.to_csv(scored, index=False)
+
+    manifest = run_research_decision_pipeline(
+        slate_date="2026-07-15",
+        scored_board=scored,
+        live_directory=live,
+        root=tmp_path,
+    )
+
+    assert manifest["overall_status"] == "SUCCESS"
+
+    decision = pd.read_csv(
+        live / "wnba_decision_engine_board.csv"
+    )
+
+    assert decision.loc[0, "model_direction"] == "NO_DIRECTION"
+    assert decision.loc[0, "direction_gate_passed"] == 0
+    assert (
+        decision.loc[0, "direction_gate_reason"]
+        == "GAP_AND_STRENGTH_TOO_LOW"
+    )
+
+    paths = pd.read_csv(
+        live / "wnba_selection_path_board.csv"
+    )
+
+    assert paths.loc[0, "selection_path"] == "NO_BET"
+    assert paths.loc[0, "path_direction"] == "NO_DIRECTION"
+
+    probability = pd.read_csv(
+        live / "wnba_probability_board.csv"
+    )
+
+    assert probability.loc[0, "selected_probability"] == pytest.approx(
+        0.50
+    )
+    assert (
+        probability.loc[0, "probability_status"]
+        == "NO_DIRECTION_NEUTRAL_FALLBACK"
+    )
+
+
+def test_large_gap_but_low_strength_is_no_direction(
+    tmp_path: Path,
+) -> None:
+    scored = tmp_path / "low_strength_board.csv"
+    live = tmp_path / "low_strength_live"
+
+    weak = sample_scored_board().iloc[[0]].copy()
+
+    weak["over_score"] = 54.0
+    weak["under_score"] = 30.0
+    weak["model_score"] = 54.0
+    weak["final_selection"] = ""
+    weak["pick_level"] = ""
+
+    weak.to_csv(scored, index=False)
+
+    manifest = run_research_decision_pipeline(
+        slate_date="2026-07-15",
+        scored_board=scored,
+        live_directory=live,
+        root=tmp_path,
+    )
+
+    assert manifest["overall_status"] == "SUCCESS"
+
+    decision = pd.read_csv(
+        live / "wnba_decision_engine_board.csv"
+    )
+
+    assert decision.loc[0, "model_direction"] == "NO_DIRECTION"
+    assert (
+        decision.loc[0, "direction_gate_reason"]
+        == "DECISION_STRENGTH_TOO_LOW"
+    )
+
+
+def test_rebs_plus_asts_over_is_hard_blocked(
+    tmp_path: Path,
+) -> None:
+    scored = tmp_path / "rebs_asts_over.csv"
+    live = tmp_path / "rebs_asts_over_live"
+
+    row = sample_scored_board().iloc[[0]].copy()
+
+    row["prop_type"] = "Rebs+Asts"
+    row["over_score"] = 75.0
+    row["under_score"] = 40.0
+    row["model_score"] = 75.0
+    row["opportunity_score"] = 85.0
+    row["matchup_score"] = 70.0
+    row["final_selection"] = ""
+    row["pick_level"] = ""
+
+    row.to_csv(scored, index=False)
+
+    manifest = run_research_decision_pipeline(
+        slate_date="2026-07-15",
+        scored_board=scored,
+        live_directory=live,
+        root=tmp_path,
+    )
+
+    assert manifest["overall_status"] == "SUCCESS"
+
+    paths = pd.read_csv(
+        live / "wnba_selection_path_board.csv"
+    )
+
+    assert paths.loc[0, "path_direction"] == "OVER"
+    assert paths.loc[0, "selection_path"] == "NO_BET"
+    assert (
+        paths.loc[0, "research_degrader_status"]
+        == "HARD_BLOCK"
+    )
+    assert (
+        paths.loc[0, "research_degrader_reason"]
+        == "HISTORICAL_DEGRADER_REBS_PLUS_ASTS_OVER"
+    )
+    assert paths.loc[0, "research_eligible_path"] == 0
+    assert paths.loc[0, "watchlist_eligible_path"] == 0
+
+
+def test_points_under_cannot_be_research_qualified(
+    tmp_path: Path,
+) -> None:
+    scored = tmp_path / "points_under.csv"
+    live = tmp_path / "points_under_live"
+
+    row = sample_scored_board().iloc[[0]].copy()
+
+    row["prop_type"] = "Points"
+    row["over_score"] = 35.0
+    row["under_score"] = 78.0
+    row["model_score"] = 78.0
+    row["opportunity_score"] = 85.0
+    row["matchup_score"] = 25.0
+    row["line_value_score"] = 80.0
+    row["evidence_agreement_score"] = 80.0
+    row["ceiling_risk_score"] = 10.0
+    row["final_selection"] = ""
+    row["pick_level"] = ""
+
+    row.to_csv(scored, index=False)
+
+    manifest = run_research_decision_pipeline(
+        slate_date="2026-07-15",
+        scored_board=scored,
+        live_directory=live,
+        root=tmp_path,
+    )
+
+    assert manifest["overall_status"] == "SUCCESS"
+
+    paths = pd.read_csv(
+        live / "wnba_selection_path_board.csv"
+    )
+
+    assert paths.loc[0, "path_direction"] == "UNDER"
+    assert (
+        paths.loc[0, "selection_path"]
+        != "RESEARCH_QUALIFIED"
+    )
+    assert (
+        paths.loc[0, "research_degrader_status"]
+        == "WATCHLIST_ONLY"
+    )
+    assert (
+        paths.loc[0, "research_degrader_reason"]
+        == "HISTORICAL_DEGRADER_POINTS_UNDER"
+    )
+
+
+def test_rebs_plus_asts_over_is_hard_blocked(
+    tmp_path: Path,
+) -> None:
+    scored = tmp_path / "rebs_asts_over.csv"
+    live = tmp_path / "rebs_asts_over_live"
+
+    row = sample_scored_board().iloc[[0]].copy()
+
+    row["prop_type"] = "Rebs+Asts"
+    row["over_score"] = 75.0
+    row["under_score"] = 40.0
+    row["model_score"] = 75.0
+    row["opportunity_score"] = 85.0
+    row["matchup_score"] = 70.0
+    row["final_selection"] = ""
+    row["pick_level"] = ""
+
+    row.to_csv(scored, index=False)
+
+    manifest = run_research_decision_pipeline(
+        slate_date="2026-07-15",
+        scored_board=scored,
+        live_directory=live,
+        root=tmp_path,
+    )
+
+    assert manifest["overall_status"] == "SUCCESS"
+
+    paths = pd.read_csv(
+        live / "wnba_selection_path_board.csv"
+    )
+
+    assert paths.loc[0, "path_direction"] == "OVER"
+    assert paths.loc[0, "selection_path"] == "NO_BET"
+    assert (
+        paths.loc[0, "research_degrader_status"]
+        == "HARD_BLOCK"
+    )
+    assert (
+        paths.loc[0, "research_degrader_reason"]
+        == "HISTORICAL_DEGRADER_REBS_PLUS_ASTS_OVER"
+    )
+    assert paths.loc[0, "research_eligible_path"] == 0
+    assert paths.loc[0, "watchlist_eligible_path"] == 0
+
+
+def test_points_under_cannot_be_research_qualified(
+    tmp_path: Path,
+) -> None:
+    scored = tmp_path / "points_under.csv"
+    live = tmp_path / "points_under_live"
+
+    row = sample_scored_board().iloc[[0]].copy()
+
+    row["prop_type"] = "Points"
+    row["over_score"] = 35.0
+    row["under_score"] = 78.0
+    row["model_score"] = 78.0
+    row["opportunity_score"] = 85.0
+    row["matchup_score"] = 25.0
+    row["line_value_score"] = 80.0
+    row["evidence_agreement_score"] = 80.0
+    row["ceiling_risk_score"] = 10.0
+    row["final_selection"] = ""
+    row["pick_level"] = ""
+
+    row.to_csv(scored, index=False)
+
+    manifest = run_research_decision_pipeline(
+        slate_date="2026-07-15",
+        scored_board=scored,
+        live_directory=live,
+        root=tmp_path,
+    )
+
+    assert manifest["overall_status"] == "SUCCESS"
+
+    paths = pd.read_csv(
+        live / "wnba_selection_path_board.csv"
+    )
+
+    assert paths.loc[0, "path_direction"] == "UNDER"
+    assert (
+        paths.loc[0, "selection_path"]
+        != "RESEARCH_QUALIFIED"
+    )
+    assert (
+        paths.loc[0, "research_degrader_status"]
+        == "WATCHLIST_ONLY"
+    )
+    assert (
+        paths.loc[0, "research_degrader_reason"]
+        == "HISTORICAL_DEGRADER_POINTS_UNDER"
+    )
